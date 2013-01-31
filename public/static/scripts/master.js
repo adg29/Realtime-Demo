@@ -1,10 +1,15 @@
 var socket = io.connect(window.location.origin);
 
 socket.on('message', function(update){ 
-  console.log('on message');
-  console.log(update);
-  var data = $.parseJSON(update);
-  $(document).trigger(data);
+  try{
+    var data = $.parseJSON(update);
+    console.log('on:message');
+    $(document).trigger(data);
+  }catch(e){
+    console.log('saved from crying due to parse or trigger e');
+    console.log(update);
+    console.log(e);
+  }
 });
 
 var Media = {

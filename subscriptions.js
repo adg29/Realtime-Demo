@@ -60,7 +60,6 @@ pubSubClient.on('pmessage', function(pattern, channel, message){
       'channelName': channelName
     };
     helpers.debug('socket.clients for each')
-    helpers.debug(socket.clients)
     for(sessionId in si_clients){
       try{
         helpers.debug('try socket clients send') 
