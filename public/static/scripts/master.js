@@ -1,24 +1,37 @@
 var socket = io.connect(window.location.origin);
 
 socket.on('message', function(update){ 
+  var data,tmp;
   try{
-    var data = $.parseJSON(update);
-    console.log('on:message');
+    tmp = update;
+  }catch(e){
+    // console.log('saved from crying due to set');
+    // console.log(e);
+  }
+  try{
+    data = $.parseJSON(tmp);
     $(document).trigger(data);
   }catch(e){
-    console.log('saved from crying due to parse or trigger e');
-    console.log(update);
+    console.log('saved from crying due to parse');
+    console.log(tmp);
     console.log(e);
+  }
+  try{
+    console.log('');
+    //console.log('on:message');
+  }catch(e){
+    // console.log('saved from crying due to trigger e');
+    // console.log(data);
+    // console.log(e);
   }
 });
 
 var Media = {
     onNewMedia: function(ev) {
-        console.log('onNewMedia');
-        console.log(ev);
+        //console.log(ev);
         $(ev.media).each(function(index, media){
             $('<img/>').attr('src', media.images.low_resolution.url).load(function(){
-                var numChildren = $('#wrapper').children().length;
+            var numChildren = $('#wrapper').children().length;
             var index = Math.floor(Math.random() * numChildren);
             var $container = $($('#wrapper').children()[index]);
             var $oldCube = $('.cube', $container);
