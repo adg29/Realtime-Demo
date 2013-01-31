@@ -8,14 +8,30 @@ function isValidRequest(request) {
     // First, let's verify the payload's integrity by making sure it's
     // coming from a trusted source. We use the client secret as the key
     // to the HMAC.
+    /*
+   To verify that the payload you received comes from us, you can verify the "X-Hub-Signature" header. This will be a SHA-1-signed hexadecimal digest, using your client secret as a key and the payload as the message. Our Ruby and Python libraries provide sample implementations of this check. 
+   */
     var hmac = crypto.createHmac('sha1', settings.CLIENT_SECRET);
     hmac.update(request.rawBody);
+    var hmacback = crypto.createHmac('sha1', settings.CLIENT_SECRET);
+    hmacback.update(request.rawBody[0]);
     var providedSignature = request.headers['x-hub-signature'];
     var calculatedSignature = hmac.digest(encoding='hex');
+    var calculatedSignatureBack = hmacback.digest(encoding='hex');
     
     // If they don't match up or we don't have any data coming over the
     // wire, then it's not valid.
-    return !((providedSignature != calculatedSignature) || !request.body)
+    debug( '!((providedSignature != calculatedSignature) || !request.rawBody)' )
+    debug( 'providedSignature != calculatedSignature' )
+    debug( providedSignature != calculatedSignature )
+    debug( providedSignature )
+    debug( calculatedSignature )
+    debug( calculatedSignatureBack )
+    debug('!request.rawBody')
+    debug(!request.rawBody)
+    debug(request.rawBody)
+    debug(request.rawBody[0])
+    return !((providedSignature != calculatedSignature) || !request.rawBody)
 }
 exports.isValidRequest = isValidRequest;
 
@@ -60,11 +76,11 @@ function processGeography(geoName, update){
     settings.httpClient.get(options, function(response){
       var data = '';
       response.on('data', function(chunk){
-        debug("Got data...");
+        debug("processGeography Got data...");
         data += chunk;
       });
       response.on('end', function(){
-        debug("Got end.");
+        debug("processGeography Got end.");
           try {
             var parsedResponse = JSON.parse(data);
           } catch (e) {
@@ -80,7 +96,7 @@ function processGeography(geoName, update){
         
         // Let all the redis listeners know that we've got new media.
         redisClient.publish('channel:' + geoName, data);
-        debug("Published: " + data);
+        debug("*********Published: " + data);
       });
     });
   });
@@ -91,6 +107,7 @@ function getMedia(callback){
     // This function gets the most recent media stored in redis
   redisClient.lrange('media:objects', 0, 14, function(error, media){
       debug("getMedia: got " + media.length + " items");
+      debug('redisMedia')
       // Parse each media JSON to send to callback
       media = media.map(function(json){return JSON.parse(json);});
       callback(error, media);

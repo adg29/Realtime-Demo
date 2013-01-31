@@ -1,0 +1,16 @@
+{
+  "name": "instagram-realtime",
+  "description": "Instagram Realtime",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "3.x",
+    "redis": "*",
+    "crypto": "*",
+    "url": "*",
+    "buffertools": "*",
+    "fs": "*",
+    "jade": "*",
+    "socket.io": "*"
+  }
+}

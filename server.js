@@ -10,6 +10,7 @@ var url = require('url'),
   settings = require('./settings'),
   helpers = require('./helpers'),
   subscriptions = require('./subscriptions');
+var buffertools = require('buffertools');
 
 var app = settings.app;
 
@@ -28,17 +29,22 @@ app.post('/callbacks/geo/:geoName', function(request, response){
     
    // First, let's verify the payload's integrity
    if(!helpers.isValidRequest(request)) {
+     helpers.debug('FAIL')
      response.send('FAIL');
      return;
    }
     
     // Go through and process each update. Note that every update doesn't
     // include the updated data - we use the data in the update to query
-    // the Instagram API to get the data we want.
-  var updates = request.body;
+    // the  API to get the data we want.
+  var updates = JSON.parse(request.rawBody);
   var geoName = request.params.geoName;
+  helpers.debug('geoNameParams')
+  helpers.debug(geoName)
   for(index in updates){
     var update = updates[index];
+    helpers.debug('updateLoop')
+    helpers.debug(update)
     if(update['object'] == "geography")
       helpers.processGeography(geoName, update);
   }
@@ -46,13 +52,21 @@ app.post('/callbacks/geo/:geoName', function(request, response){
   response.send('OK');
 });
 
+app.post('/webhooks', function(request, response){
+  helpers.debug("PUT /webhooks/" + request.params);
+  response.send('OK');
+});
+
+
 // Render the home page
 app.get('/', function(request, response){
   helpers.getMedia(function(error, media){
-  response.render('geo.jade', {
-        locals: { images: media }
+  helpers.debug('got media');
+  helpers.debug(media);
+  response.render('geo', {
+        images: media 
     });
   });
 });
 
-app.listen(settings.appPort);
+//app.listen(settings.appPort);

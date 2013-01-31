@@ -1,0 +1,12 @@
+extends geo
+
+block image
+	for image in images
+		h1 Image
+		.container
+			.cube
+				img(src=image.images.low_resolution.url)
+				.info
+					span.location #{image.location.name}
+					span.channel #{image.meta.location}
+					

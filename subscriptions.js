@@ -1,12 +1,21 @@
-var redis = require('redis'),
+var 
+    settings = require('./settings'),
+    helpers = require('./helpers'),
+    redis = require('redis'),
     fs = require('fs'),
     jade = require('jade'),
     io = require('socket.io'),
-    settings = require('./settings'),
-    helpers = require('./helpers'),
     app = settings.app,
-    subscriptionPattern = 'channel:*',
-    socket = io.listen(app);
+    subscriptionPattern = 'channel:*';
+    socket = io.listen(settings.server),
+    si_clients = {};
+
+
+socket.sockets.on('connection', function (socket) {
+  helpers.debug("sockets connection")
+  helpers.debug(socket);
+  si_clients[socket.id] = socket;
+});
 
 // We use Redis's pattern subscribe command to listen for signals
 // notifying us of new updates.
@@ -17,7 +26,7 @@ var pubSubClient = redis.createClient(settings.REDIS_PORT, settings.REDIS_HOST);
 pubSubClient.psubscribe(subscriptionPattern);
 
 pubSubClient.on('pmessage', function(pattern, channel, message){
-  helpers.debug("Handling pmessage: " + message);
+  helpers.debug("Handling " + pattern + " pmessage: " + message);
 
   /* Every time we receive a message, we check to see if it matches
      the subscription pattern. If it does, then go ahead and parse it. */
@@ -31,6 +40,8 @@ pubSubClient.on('pmessage', function(pattern, channel, message){
         // works.
         var channelName = channel.split(':')[1].replace(/-/g, ' ');
       } catch (e) {
+          helpers.debug('catch channel parse');
+          helpers.debug(e);
           return;
       }
     
@@ -48,8 +59,21 @@ pubSubClient.on('pmessage', function(pattern, channel, message){
       'media': data,
       'channelName': channelName
     };
-    for(sessionId in socket.clients){
-      socket.clients[sessionId].send(JSON.stringify(update));
+    helpers.debug('socket.clients for each')
+    helpers.debug(socket.clients)
+    for(sessionId in si_clients){
+      try{
+        helpers.debug('try socket clients send') 
+        helpers.debug(sessionId) 
+        helpers.debug(update) 
+        var client = si_clients[sessionId];
+        client.send(JSON.stringify(update));
+      }catch (e) {
+        helpers.debug('catch socket clients send') 
+        helpers.debug(sessionId) 
+        helpers.debug(update) 
+        helpers.debug(e) 
+      }
     }
   }
 });

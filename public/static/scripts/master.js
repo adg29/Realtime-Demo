@@ -1,12 +1,16 @@
-var socket = new io.Socket();
+var socket = io.connect(window.location.origin);
 
 socket.on('message', function(update){ 
+  console.log('on message');
+  console.log(update);
   var data = $.parseJSON(update);
   $(document).trigger(data);
 });
 
 var Media = {
     onNewMedia: function(ev) {
+        console.log('onNewMedia');
+        console.log(ev);
         $(ev.media).each(function(index, media){
             $('<img/>').attr('src', media.images.low_resolution.url).load(function(){
                 var numChildren = $('#wrapper').children().length;
