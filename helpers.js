@@ -30,7 +30,6 @@ function isValidRequest(request) {
     debug('!request.rawBody')
     debug(!request.rawBody)
     debug(request.rawBody)
-    debug(request.rawBody[0])
     return !((providedSignature != calculatedSignature) || !request.rawBody)
 }
 exports.isValidRequest = isValidRequest;

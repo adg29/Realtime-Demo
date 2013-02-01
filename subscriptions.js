@@ -10,6 +10,12 @@ var
     socket = io.listen(settings.server),
     si_clients = {};
 
+// assuming io is the Socket.IO server object
+socket.configure(function () { 
+  helpers.debug('socket configure xhr-polling');
+  socket.set("transports", ["xhr-polling"]); 
+  socket.set("polling duration", 10); 
+});
 
 socket.sockets.on('connection', function (socket) {
   helpers.debug("sockets connection")

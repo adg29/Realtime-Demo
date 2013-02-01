@@ -1,4 +1,4 @@
-export IG_CALLBACK_HOST="http://4wff.localtunnel.com"
+export IG_CALLBACK_HOST="http://4bbd.localtunnel.com"
 export IG_CLIENT_ID="87f4400b663c4c568ac2bd9a36b87b67"
 export IG_CLIENT_SECRET="ace1dd176b674b75879a14d4fd175962"
 alias sub_delete='curl -X DELETE  "https://api.instagram.com/v1/subscriptions?object=all&client_id=$IG_CLIENT_ID&client_secret=$IG_CLIENT_SECRET"'
