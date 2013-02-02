@@ -37,7 +37,16 @@ if (process.env.REDISTOGO_URL) {
   redisClient = redis.createClient(settings.REDIS_PORT, settings.REDIS_HOST);
 }
 
-var pubSubClient = redis.createClient(settings.REDIS_PORT, settings.REDIS_HOST);
+var pubSubClient;
+if (process.env.REDISTOGO_URL) {
+  // inside if statement
+  var rtg   = require("url").parse(process.env.REDISTOGO_URL);
+  pubSubClient = redis.createClient(rtg.port, rtg.hostname);
+  pubSubClient.auth(rtg.auth.split(":")[1]); 
+} else {
+  pubSubClient = redis.createClient(settings.REDIS_PORT, settings.REDIS_HOST);
+}
+
 pubSubClient.psubscribe(subscriptionPattern);
 
 pubSubClient.on('pmessage', function(pattern, channel, message){
