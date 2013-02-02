@@ -1,8 +1,15 @@
 var redis = require('redis');
 var settings = require('./settings');
 var crypto = require('crypto');
+var redisClient;
 
-var redisClient = redis.createClient(settings.REDIS_PORT, settings.REDIS_HOST);
+if (process.env.REDISTOGO_URL) {
+  var rtg   = require("url").parse(process.env.REDISTOGO_URL);
+  redisClient =redis.createClient(rtg.port, rtg.hostname);
+  redisClient.auth(rtg.auth.split(":")[1]); 
+} else {
+  redisClient = redis.createClient(settings.REDIS_PORT, settings.REDIS_HOST);
+}
 
 function isValidRequest(request) {
     // First, let's verify the payload's integrity by making sure it's

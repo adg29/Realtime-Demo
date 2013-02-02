@@ -6,6 +6,7 @@
   "dependencies": {
     "express": "3.x",
     "redis": "*",
+    "hiredis": "*",
     "crypto": "*",
     "url": "*",
     "buffertools": "*",
