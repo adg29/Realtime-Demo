@@ -60,7 +60,7 @@ app.post('/webhooks', function(request, response){
 
 // Render the home page
 app.get('/', function(request, response){
-  helpers.debug("render homepage");
+  helpers.debug("render homepageeee");
   /*
   helpers.getMedia(function(error, media){
   helpers.debug('got media');
