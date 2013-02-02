@@ -60,6 +60,8 @@ app.post('/webhooks', function(request, response){
 
 // Render the home page
 app.get('/', function(request, response){
+  helpers.debug("render homepage");
+  /*
   helpers.getMedia(function(error, media){
   helpers.debug('got media');
   helpers.debug(media);
@@ -67,6 +69,7 @@ app.get('/', function(request, response){
         images: media 
     });
   });
+*/
 });
 
 //app.listen(settings.appPort);
