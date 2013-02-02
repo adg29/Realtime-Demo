@@ -26,7 +26,16 @@ socket.sockets.on('connection', function (socket) {
 // We use Redis's pattern subscribe command to listen for signals
 // notifying us of new updates.
 
-var redisClient = redis.createClient(settings.REDIS_PORT, settings.REDIS_HOST);
+
+var redisClient;
+if (process.env.REDISTOGO_URL) {
+  // inside if statement
+  var rtg   = require("url").parse(process.env.REDISTOGO_URL);
+  redisClient = redis.createClient(rtg.port, rtg.hostname);
+  redisClient.auth(rtg.auth.split(":")[1]); 
+} else {
+  redisClient = redis.createClient();
+}
 
 var pubSubClient = redis.createClient(settings.REDIS_PORT, settings.REDIS_HOST);
 pubSubClient.psubscribe(subscriptionPattern);
