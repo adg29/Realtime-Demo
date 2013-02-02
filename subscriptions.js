@@ -34,7 +34,7 @@ if (process.env.REDISTOGO_URL) {
   redisClient = redis.createClient(rtg.port, rtg.hostname);
   redisClient.auth(rtg.auth.split(":")[1]); 
 } else {
-  redisClient = redis.createClient();
+  redisClient = redis.createClient(settings.REDIS_PORT, settings.REDIS_HOST);
 }
 
 var pubSubClient = redis.createClient(settings.REDIS_PORT, settings.REDIS_HOST);
