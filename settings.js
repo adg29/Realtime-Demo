@@ -7,7 +7,7 @@ var server = require('http').createServer(app);
 exports.app = app;
 exports.server = server;
 
-exports.appPort = process.env.IG_APP_PORT || 3000;
+exports.appPort = process.env.PORT || process.env.IG_APP_PORT || 3000;
 exports.CLIENT_ID = process.env.IG_CLIENT_ID || 'CLIENT_ID'
 exports.CLIENT_SECRET = process.env.IG_CLIENT_SECRET || 'CLIENT_SECRET';
 exports.httpClient = (process.env.IG_USE_INSECURE ? require('http') : require('https'));
