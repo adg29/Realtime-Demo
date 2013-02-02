@@ -1,3 +1,12 @@
+heroku config:add BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-nodejs.git
+package.json
+
+
+
+
+
+
+
 I created this fork (https://github.com/asalant/Realtime-Demo) of
 https://github.com/Instagram/Realtime-Demo because that implementation is
 incompatible with recent versions of a few dependencies.
