@@ -11,6 +11,15 @@ if (process.env.REDISTOGO_URL) {
   redisClient = redis.createClient(settings.REDIS_PORT, settings.REDIS_HOST);
 }
 
+redisClient.on("error", function (err) {
+  debug("ERROR: redisClient");
+  debug(e);
+  redisClient.flushDB( function (err, didSucceed) {
+    debug('FLUSHDB didSucceed'); // true
+    debug(didSucceed); // true
+  });
+});
+
 function isValidRequest(request) {
     // First, let's verify the payload's integrity by making sure it's
     // coming from a trusted source. We use the client secret as the key
@@ -101,8 +110,18 @@ function processGeography(geoName, update){
         setMinID(geoName, parsedResponse['data']);
         
         // Let all the redis listeners know that we've got new media.
-        redisClient.publish('channel:' + geoName, data);
-        debug("*********Published: " + data);
+        try{
+          redisClient.publish('channel:' + geoName, data);
+          debug("*********Published: " + data);
+        }catch(e){
+          debug("REDIS ERROR: redisClient.publish('channel:' + geoName, data)");
+          debug(e);
+
+          redisClient.flushDB( function (err, didSucceed) {
+            debug('FLUSHDB didSucceed'); // true
+            debug(didSucceed); // true
+          });
+        }
       });
     });
   });
@@ -112,6 +131,8 @@ exports.processGeography = processGeography;
 function getMedia(callback){
     // This function gets the most recent media stored in redis
   redisClient.lrange('media:objects', 0, 14, function(error, media){
+
+
       debug("getMedia: got " + media.length + " items");
       debug('redisMedia')
       // Parse each media JSON to send to callback
@@ -148,7 +169,7 @@ function setMinID(geoName, data){
     var nextMinID;
     try {
         nextMinID = parseInt(sorted[0].id);
-      redisClient.set('min-id:channel:' + geoName, nextMinID);
+        redisClient.set('min-id:channel:' + geoName, nextMinID);
     } catch (e) {
         console.log('Error parsing min ID');
         console.log(sorted);

@@ -37,6 +37,16 @@ if (process.env.REDISTOGO_URL) {
   redisClient = redis.createClient(settings.REDIS_PORT, settings.REDIS_HOST);
 }
 
+redisClient.on("error", function (err) {
+  debug("ERROR: redisClient subscriptions.js");
+  debug(e);
+  redisClient.flushDB( function (err, didSucceed) {
+    debug('FLUSHDB didSucceed'); // true
+    debug(didSucceed); // true
+  });
+});
+
+
 var pubSubClient;
 if (process.env.REDISTOGO_URL) {
   // inside if statement
@@ -46,6 +56,16 @@ if (process.env.REDISTOGO_URL) {
 } else {
   pubSubClient = redis.createClient(settings.REDIS_PORT, settings.REDIS_HOST);
 }
+
+pubSubClient.on("error", function (err) {
+  debug("ERROR: pubsubClient subscriptions.js");
+  debug(e);
+  pubSubClient.flushDB( function (err, didSucceed) {
+    debug('FLUSHDB didSucceed'); // true
+    debug(didSucceed); // true
+  });
+});
+
 
 pubSubClient.psubscribe(subscriptionPattern);
 
