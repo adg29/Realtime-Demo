@@ -20,12 +20,35 @@ redisClient.on("error", function (err) {
   });
 });
 
+
+/*
+function isValidRequest(request) {
+    // First, let's verify the payload's integrity by making sure it's
+    // coming from a trusted source. We use the client secret as the key
+    // to the HMAC.
+    var hmac = crypto.createHmac('sha1', settings.CLIENT_SECRET);
+    hmac.update(request.rawBody);
+    var providedSignature = request.headers['x-hub-signature'];
+    var calculatedSignature = hmac.digest(encoding='hex');
+    
+    // If they don't match up or we don't have any data coming over the
+    // wire, then it's not valid.
+    return !((providedSignature != calculatedSignature) || !request.body)
+}
+exports.isValidRequest = isValidRequest;
+*/
+
+
 function isValidRequest(request) {
     // First, let's verify the payload's integrity by making sure it's
     // coming from a trusted source. We use the client secret as the key
     // to the HMAC.
     /*
-   To verify that the payload you received comes from us, you can verify the "X-Hub-Signature" header. This will be a SHA-1-signed hexadecimal digest, using your client secret as a key and the payload as the message. Our Ruby and Python libraries provide sample implementations of this check. 
+   To verify that the payload you received comes from us, 
+   you can verify the "X-Hub-Signature" header. 
+   This will be a SHA-1-signed hexadecimal digest, 
+   using your client secret as a key and the payload as the message. 
+   Our Ruby and Python libraries provide sample implementations of this check. 
    */
     var hmac = crypto.createHmac('sha1', settings.CLIENT_SECRET);
     hmac.update(request.rawBody);
@@ -37,6 +60,7 @@ function isValidRequest(request) {
     
     // If they don't match up or we don't have any data coming over the
     // wire, then it's not valid.
+    /*
     debug( '!((providedSignature != calculatedSignature) || !request.rawBody)' )
     debug( 'providedSignature != calculatedSignature' )
     debug( providedSignature != calculatedSignature )
@@ -46,6 +70,7 @@ function isValidRequest(request) {
     debug('!request.rawBody')
     debug(!request.rawBody)
     debug(request.rawBody)
+    */
     return !((providedSignature != calculatedSignature) || !request.rawBody)
 }
 exports.isValidRequest = isValidRequest;
@@ -56,6 +81,72 @@ function debug(msg) {
   }
 }
 exports.debug = debug;
+
+function processTag(tag, update){
+  var path = '/v1/tags/' + update.object_id + '/media/recent/';
+  getMinID(tag, function(error, minID){
+    var queryString = "?client_id="+ settings.CLIENT_ID;
+    if(minID){
+      queryString += '&min_id=' + minID;
+    } else {
+        // If this is the first update, just grab the most recent.
+      queryString += '&count=1';
+    }
+    var options = {
+      host: settings.apiHost,
+      // Note that in all implementations, basePath will be ''. Here at
+      // instagram, this aint true ;)
+      path: settings.basePath + path + queryString
+    };
+    if(settings.apiPort){
+        options['port'] = settings.apiPort;
+    }
+
+        // Asynchronously ask the Instagram API for new media for a given
+        // tag.
+    debug("processTac: getting " + path);
+    debug("options")
+    settings.httpClient.get(options, function(response){
+      var data = '';
+      response.on('data', function(chunk){
+        debug("processTag Got data...");
+        data += chunk;
+      });
+      response.on('end', function(){
+        debug("processTag Got end.");
+          try {
+            var parsedResponse = JSON.parse(data);
+          } catch (e) {
+              console.log('Couldn\'t parse data. Malformed?');
+              return;
+          }
+        if(!parsedResponse || !parsedResponse['data']){
+            console.log('Did not receive data for ' + tag +':');
+            console.log(data);
+            return;
+        }
+        setMinID(tag, parsedResponse['data']);
+        
+        // Let all the redis listeners know that we've got new media.
+        try{
+          redisClient.publish('channel:' + tag , data);
+          debug("*********Published: " + data);
+        }catch(e){
+          debug("REDIS ERROR: redisClient.publish('channel:' + tag, data)");
+          debug(e);
+
+          redisClient.flushDB( function (err, didSucceed) {
+            debug('FLUSHDB didSucceed'); // true
+            debug(didSucceed); // true
+          });
+        }
+      });
+    });
+  });
+  //debug("Processed " + updates.length + " tag updates");
+}
+exports.processTag = processTag;
+
 
 /*
 
@@ -125,6 +216,7 @@ function processGeography(geoName, update){
       });
     });
   });
+  //debug("Processed " + updates.length + " updates");
 }
 exports.processGeography = processGeography;
 
@@ -157,19 +249,19 @@ exports.getMedia = getMedia;
     
 */
 
-function getMinID(geoName, callback){
-  redisClient.get('min-id:channel:' + geoName, callback);
+function getMinID(obj_id, callback){
+  redisClient.get('min-id:channel:' + obj_id, callback);
 }
 exports.getMinID = getMinID;
 
-function setMinID(geoName, data){
+function setMinID(obj_id, data){
     var sorted = data.sort(function(a, b){
         return parseInt(b.id) - parseInt(a.id);
     });
     var nextMinID;
     try {
         nextMinID = parseInt(sorted[0].id);
-        redisClient.set('min-id:channel:' + geoName, nextMinID);
+        redisClient.set('min-id:channel:' + obj_id, nextMinID);
     } catch (e) {
         console.log('Error parsing min ID');
         console.log(sorted);
