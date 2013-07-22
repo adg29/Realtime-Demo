@@ -4,15 +4,6 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "express": "3.x",
-    "redis": "*",
-    "hiredis": "*",
-    "crypto": "*",
-    "url": "*",
-    "buffertools": "*",
-    "fs": "*",
-    "jade": "*",
-    "socket.io": "*"
   },
   "engines": {
     "node": "0.6.18",
