@@ -1,5 +1,6 @@
 export IG_CALLBACK_HOST="http://4bbd.localtunnel.com"
-export WHO_CALLBACK_HOST="http://evening-anchorage-8309.herokuapp.com"
+export WHO_CALLBACK_HOST="http://whoworewhatwhere.herokuapp.com"
+>>>>>>> Stashed changes
 export IG_CLIENT_ID="87f4400b663c4c568ac2bd9a36b87b67"
 export IG_CLIENT_SECRET="ace1dd176b674b75879a14d4fd175962"
 alias sub_delete='curl -X DELETE  "https://api.instagram.com/v1/subscriptions?object=all&client_id=$IG_CLIENT_ID&client_secret=$IG_CLIENT_SECRET"'
@@ -22,6 +23,8 @@ alias sub_tsquare_geo='curl -F "client_id=$IG_CLIENT_ID"          -F "client_sec
 alias sub_willy_geo='curl -F "client_id=$IG_CLIENT_ID"          -F "client_secret=$IG_CLIENT_SECRET"        -F "object=geography"         -F "aspect=media"          -F "lat=40.717631"          -F "lng=-73.958631"          -F "radius=5000"          -F "callback_url=$IG_CALLBACK_HOST/callbacks/geo/new-york-city/"          https://api.instagram.com/v1/subscriptions'
 alias sub_alley_geo='curl -F "client_id=$IG_CLIENT_ID"          -F "client_secret=$IG_CLIENT_SECRET"        -F "object=geography"         -F "aspect=media"          -F "lat=40.762211"          -F "lng=-73.982642"          -F "radius=5000"          -F "callback_url=$IG_CALLBACK_HOST/callbacks/geo/new-york-city/"          https://api.instagram.com/v1/subscriptions'
 
+alias sub_delete_who='heroku run curl -X DELETE  "https://api.instagram.com/v1/subscriptions?object=all&client_id=$IG_CLIENT_ID&client_secret=$IG_CLIENT_SECRET"'
+alias sub_list_who='heroku run curl "https://api.instagram.com/v1/subscriptions?client_id=$IG_CLIENT_ID&client_secret=$IG_CLIENT_SECRET"'
 alias sub_willy_geo_who='heroku run curl -F "client_id=$IG_CLIENT_ID"          -F "client_secret=$IG_CLIENT_SECRET"        -F "object=geography"         -F "aspect=media"          -F "lat=40.717631"          -F "lng=-73.958631"          -F "radius=5000"          -F "callback_url=$WHO_CALLBACK_HOST/callbacks/geo/new-york-city/"          https://api.instagram.com/v1/subscriptions'
 alias sub_alley_geo_who='heroku run curl -F "client_id=$IG_CLIENT_ID"          -F "client_secret=$IG_CLIENT_SECRET"        -F "object=geography"         -F "aspect=media"          -F "lat=40.762211"          -F "lng=-73.982642"          -F "radius=5000"          -F "callback_url=$WHO_CALLBACK_HOST/callbacks/geo/new-york-city/"          https://api.instagram.com/v1/subscriptions'
 
