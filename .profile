@@ -1,4 +1,6 @@
-export IG_CALLBACK_HOST="http://masgalan.fwd.wf"
+export IG_APP_PORT="4567"
+export PORT="4567"
+export IG_CALLBACK_HOST="http://galan.fwd.wf"
 export WHO_CALLBACK_HOST="http://whoworewhatwhere.herokuapp.com"
 export IG_CLIENT_ID="87f4400b663c4c568ac2bd9a36b87b67"
 export IG_CLIENT_SECRET="ace1dd176b674b75879a14d4fd175962"
@@ -36,3 +38,4 @@ alias sub_nyc_who='heroku run curl -F "client_id=$IG_CLIENT_ID"      -F "client_
 alias sub_ootd_who='heroku run curl -F "client_id=$IG_CLIENT_ID"      -F "client_secret=$IG_CLIENT_SECRET"      -F "object=tag"      -F "aspect=media"      -F "object_id=ootd"      -F "callback_url=$WHO_CALLBACK_HOST/callbacks/tag/ootd/"      https://api.instagram.com/v1/subscriptions/'
 alias sub_rainroom_who='heroku run curl -F "client_id=$IG_CLIENT_ID"      -F "client_secret=$IG_CLIENT_SECRET"      -F "object=tag"      -F "aspect=media"      -F "object_id=rainroom"      -F "callback_url=$WHO_CALLBACK_HOST/callbacks/tag/rainroom/"      https://api.instagram.com/v1/subscriptions/'
 
+export PATH="~/Code/utilities:$PATH"

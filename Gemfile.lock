@@ -1,17 +1,16 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    json (1.5.1)
-    localtunnel (0.2)
-      json (>= 1.2.4)
-      net-ssh (>= 2.0.22)
-      net-ssh-gateway (>= 1.0.1)
-    net-ssh (2.1.4)
-    net-ssh-gateway (1.0.1)
-      net-ssh (>= 1.99.1)
+    forward (0.3.2)
+      highline (~> 1.6.18)
+      json (~> 1.7.7)
+      net-ssh (~> 2.6.7)
+    highline (1.6.21)
+    json (1.7.7)
+    net-ssh (2.6.8)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  localtunnel
+  forward
