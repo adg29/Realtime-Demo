@@ -11,9 +11,7 @@ var Media = {
         $corner_stamp.prepend("<p>+ "+newMedia.length+" instas</p>");
         var $extraElems = $wrapper.data('isotope')
         .$filteredAtoms.filter( function( i,el ) {
-          return i%21 >= 21-newMedia.length && !_.some(newMedia,function(m){
-            return m.id == $(el).data('uid');
-          });
+          return i%21 >= 21-newMedia.length;
         });
 
         $corner_stamp.prepend("<p>Removing "+$extraElems.length+"</p>");
@@ -73,7 +71,7 @@ socket.on('message', function(update){
     data = $.parseJSON(tmp);
     $corner_stamp.prepend("Incoming");
     $corner_stamp.prepend("<pre>"+JSON.stringify(data)+"</pre>");
-    console.log(data);
+    //console.log(data);
     $(document).trigger(data);
   }catch(e){
     console.log('saved from crying due to parse');
