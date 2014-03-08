@@ -11,6 +11,12 @@ body {
 	margin: 0 auto;
 }
 
+.corner-stamp{
+	height: 300px;
+	overflow: scroll;
+	color: #fff;
+}
+
 p {
 	font-size: .8125em;
 	line-height: 18px;
@@ -60,6 +66,7 @@ a:hover {
 /* @group Cubes */
 
 #wrapper {
+	/*
 	height: 600px;
 	width: 1000px;
 	-webkit-perspective: 800;
@@ -68,6 +75,7 @@ a:hover {
 	-webkit-border-radius: 10px;
 	border-bottom: 1px solid #333;
 	position: relative;
+	*/
 }
 
 .cube {
