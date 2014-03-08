@@ -37,7 +37,7 @@ var Media = {
         $corner_stamp.prepend("<p>+ "+newMedia.length+" instas</p>");
         var $extraElems = $wrapper.data('isotope')
         .$filteredAtoms.filter( function( i,el ) {
-          return i%21 >= 21-newMedia.length;
+          return i%23 >= 23-newMedia.length;
         });
 
         $corner_stamp.prepend("<p>Removing "+$extraElems.length+"</p>");
