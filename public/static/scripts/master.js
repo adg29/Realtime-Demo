@@ -35,16 +35,24 @@ var Media = {
           return _.contains($('.element[data-uid]').map(function(){ return $(this).data('uid')}).get(),m.id);
         });
         $corner_stamp.prepend("<p>+ "+newMedia.length+" instas</p>");
+
+        var flat_tags;
+        flat_tags = _.reduceRight(newMedia, function(a, b) { 
+          return a.concat(b.tags); 
+        }, []) 
+
+        $corner_stamp.prepend("<pre>"+flat_tags.join('\n')+"</pre>");
+
         var $extraElems = $wrapper.data('isotope')
         .$filteredAtoms.filter( function( i,el ) {
           return i%23 >= 23-newMedia.length;
         });
 
-        $corner_stamp.prepend("<p>Removing "+$extraElems.length+"</p>");
+        var status = "<p class='small'>Removing "+$extraElems.length+" | ";
         $wrapper
         .isotope( 'remove', $extraElems, function() {
-          $corner_stamp.prepend("<p>"+$wrapper.data('isotope').$filteredAtoms.length+" elements after removal</p>");
-          $corner_stamp.prepend("<p>Adding "+newMedia.length+" more</p>");
+          status += " "+$wrapper.data('isotope').$filteredAtoms.length+" instas after removal | ";
+          //$corner_stamp.prepend("<p> + "+newMedia.length+"</p>");
           $(newMedia).each(function(index, media){
             // $corner_stamp.prepend("<pre>"+JSON.stringify(media)+"</pre>");
             // $corner_stamp.prepend("<img src='"+media.images.low_resolution.url+"'/>");
@@ -55,7 +63,7 @@ var Media = {
           });
           $wrapper.imagesLoaded( function(){
             $wrapper.isotope( 'reloadItems' ).isotope({ sortBy: 'date',sortAscending: true}); 
-            $corner_stamp.prepend("<p>"+$wrapper.data('isotope').$filteredAtoms.length+" elements after prepending</p>");
+            $corner_stamp.prepend(status+" "+$wrapper.data('isotope').$filteredAtoms.length+" total</p>");
           });
 
 
@@ -99,13 +107,11 @@ socket.on('message', function(update){
   }
   try{
     data = $.parseJSON(tmp);
-    $corner_stamp.prepend("Incoming");
-    $corner_stamp.prepend("<pre>"+JSON.stringify(data)+"</pre>");
     // console.log(data);
     $(document).trigger(data);
   }catch(e){
     console.log('saved from crying due to parse');
-    console.log(tmp);
+    //console.log(tmp);
     console.log(e);
   }
 });

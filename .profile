@@ -44,5 +44,6 @@ alias sub_rainroom_who='heroku run curl -F "client_id=$IG_CLIENT_ID"      -F "cl
 alias sub_sxsw_who='curl -F "client_id=$IG_CLIENT_ID"      -F "client_secret=$IG_CLIENT_SECRET"      -F "object=tag"      -F "aspect=media"      -F "object_id=sxsw"      -F "callback_url=$WHO_CALLBACK_HOST/callbacks/tag/sxsw/"      https://api.instagram.com/v1/subscriptions/'
 alias sub_armorydream_who='curl -F "client_id=$IG_CLIENT_ID"      -F "client_secret=$IG_CLIENT_SECRET"      -F "object=tag"      -F "aspect=media"      -F "object_id=armorydreampiece"      -F "callback_url=$WHO_CALLBACK_HOST/callbacks/tag/armorydreampiece/"      https://api.instagram.com/v1/subscriptions/'
 alias sub_armoryshow_who='curl -F "client_id=$IG_CLIENT_ID"      -F "client_secret=$IG_CLIENT_SECRET"      -F "object=tag"      -F "aspect=media"      -F "object_id=armoryshow"      -F "callback_url=$WHO_CALLBACK_HOST/callbacks/tag/armoryshow/"      https://api.instagram.com/v1/subscriptions/'
+alias sub_armoryshow14_who='curl -F "client_id=$IG_CLIENT_ID"      -F "client_secret=$IG_CLIENT_SECRET"      -F "object=tag"      -F "aspect=media"      -F "object_id=armoryshow2014"      -F "callback_url=$WHO_CALLBACK_HOST/callbacks/tag/armoryshow2014/"      https://api.instagram.com/v1/subscriptions/'
 
 export PATH="~/Code/utilities:$PATH"

@@ -30,6 +30,10 @@ color: white;
         border-radius: 5px;
 }
 
+p.small{
+	font-size: .6em;
+}
+
 p {
 	font-size: .8125em;
 	line-height: 18px;
