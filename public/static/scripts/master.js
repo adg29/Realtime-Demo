@@ -1,4 +1,56 @@
 var socket = io.connect(window.location.origin);
+var $corner_stamp;
+var $wrapper;
+
+var Media = {
+    onNewMedia: function(ev) {
+        //console.log(ev);
+        var $extraElems = $wrapper.data('isotope')
+        .$filteredAtoms.filter( function( i ) {
+          console.log(i%21);
+          console.log('is it more than')
+          console.log(21-ev.media.length)
+          return i%21 >= 21-ev.media.length;
+        });
+
+        $corner_stamp.prepend("<p>Removing "+$extraElems.length+"</p>");
+        $wrapper
+        .isotope( 'remove', $extraElems, function() {
+          $corner_stamp.prepend("<p>"+$wrapper.data('isotope').$filteredAtoms.length+" elements after removal</p>");
+          $corner_stamp.prepend("<p>Adding "+ev.media.length+" more</p>");
+
+          $(ev.media).each(function(index, media){
+            // $corner_stamp.prepend("<pre>"+JSON.stringify(media)+"</pre>");
+            // $corner_stamp.prepend("<img src='"+media.images.low_resolution.url+"'/>");
+
+             var $newItems = $('<div class="element" data-index="'+index+'"><h3 class="user">'+media.user.username+'</h3><img src="'+media.images.low_resolution.url+'"/><div class="info"><div class="cols"></div></div></div>');
+             $wrapper
+              .prepend( $newItems );
+          });
+          $wrapper.imagesLoaded( function(){
+            $wrapper.isotope( 'reloadItems' ).isotope({ sortBy: 'original-order' }); 
+            $corner_stamp.prepend("<p>"+$wrapper.data('isotope').$filteredAtoms.length+" elements after prepending</p>");
+          });
+
+
+        });
+    };
+};
+
+$(function(){
+
+$corner_stamp = $('.corner-stamp');
+
+$wrapper = $('#wrapper')
+
+$wrapper.imagesLoaded( function(){
+  $wrapper.isotope({
+    // options
+    itemSelector : '.element',
+    layoutMode : 'fitRows'
+  });
+});
+
 
 socket.on('message', function(update){ 
   var data,tmp;
@@ -10,6 +62,9 @@ socket.on('message', function(update){
   }
   try{
     data = $.parseJSON(tmp);
+    $corner_stamp.prepend("Incoming");
+    $corner_stamp.prepend("<pre>"+JSON.stringify(data)+"</pre>");
+    console.log(data);
     $(document).trigger(data);
   }catch(e){
     console.log('saved from crying due to parse');
@@ -26,41 +81,6 @@ socket.on('message', function(update){
   }
 });
 
-var Media = {
-    onNewMedia: function(ev) {
-        //console.log(ev);
-        $(ev.media).each(function(index, media){
-            $('<img/>').attr('src', media.images.low_resolution.url).load(function(){
-            var numChildren = $('#wrapper').children().length;
-            var index = Math.floor(Math.random() * numChildren);
-            var $container = $($('#wrapper').children()[index]);
-            var $oldCube = $('.cube', $container);
-                if ($.browser.webkit){
-                $newCube = $('<div class="cube in"><span class="location"></span><span class="channel"></span</div>');
-                $newCube.prepend(this);
-                $('.location', $newCube).html(media.location.name);
-                $('.channel', $newCube).html(media.meta.location);
-                $container.addClass('animating').append($newCube);
-                $oldCube.addClass('out').bind('webkitAnimationEnd', function(){
-                  $container.removeClass('animating');
-                  $(this).remove();
-                });
-            } else {
-                $('img', $oldCube).attr('src', media.images.low_resolution.url);
-                $('.location', $oldCube).html(media.location.name);
-                $('.channel', $oldCube).html(media.meta.location);
-            }
-          }); 
-        });
-    },
-    positionAll: function(){
-        var columns = 5;
-        var width = parseInt($('.container').css('width'));
-      $('.container').each(function(index, item){
-        $(item).css('top', 10+parseInt(index / columns) * width +'px')
-             .css('left', 10+(index % columns) * width +'px');
-      });
-    }
-};
-
 $(document).bind("newMedia", Media.onNewMedia)
+
+})
