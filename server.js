@@ -45,8 +45,6 @@ app.post('/callbacks/tag/:tag', function(request, response){
     // include the updated data - we use the data in the update to query
     // the  API to get the data we want.
   var updates = JSON.parse(request.rawBody);
-  console.log(request.rawBody)
-  console.log(request.body)
   var tag = request.params.tag;
   helpers.debug('tag')
   helpers.debug(tag)
