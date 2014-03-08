@@ -1,7 +1,8 @@
 heroku config:add BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-nodejs.git
 package.json
-Heroku
-environment variable PORT)
+Heroku environment variable PORT
+exports.REDIS_PORT = 6486;
+exports.REDIS_HOST = '127.0.0.1';
 
 
 

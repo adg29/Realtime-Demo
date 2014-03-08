@@ -1,5 +1,4 @@
 export IG_APP_PORT="4567"
-export PORT="4567"
 export IG_CALLBACK_HOST="http://galan.fwd.wf"
 export WHO_CALLBACK_HOST="http://armoryshow.herokuapp.com"
 export IG_CLIENT_ID="87f4400b663c4c568ac2bd9a36b87b67"
