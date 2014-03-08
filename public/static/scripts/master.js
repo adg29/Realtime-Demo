@@ -5,37 +5,39 @@ var $wrapper;
 var Media = {
     onNewMedia: function(ev) {
         //console.log(ev);
+        var newMedia = _.reject(ev.media,function(m){
+          return _.contains($('.element[data-uid]').map(function(){ return $(this).data('uid')}).get(),m.id);
+        });
+        $corner_stamp.prepend("<p>+ "+newMedia.length+" instas</p>");
         var $extraElems = $wrapper.data('isotope')
-        .$filteredAtoms.filter( function( i ) {
-          console.log(i%21);
-          console.log('is it more than')
-          console.log(21-ev.media.length)
-          return i%21 >= 21-ev.media.length;
+        .$filteredAtoms.filter( function( i,el ) {
+          return i%21 >= 21-newMedia.length && !_.some(newMedia,function(m){
+            return m.id == $(el).data('uid');
+          });
         });
 
         $corner_stamp.prepend("<p>Removing "+$extraElems.length+"</p>");
         $wrapper
         .isotope( 'remove', $extraElems, function() {
           $corner_stamp.prepend("<p>"+$wrapper.data('isotope').$filteredAtoms.length+" elements after removal</p>");
-          $corner_stamp.prepend("<p>Adding "+ev.media.length+" more</p>");
-
-          $(ev.media).each(function(index, media){
+          $corner_stamp.prepend("<p>Adding "+newMedia.length+" more</p>");
+          $(newMedia).each(function(index, media){
             // $corner_stamp.prepend("<pre>"+JSON.stringify(media)+"</pre>");
             // $corner_stamp.prepend("<img src='"+media.images.low_resolution.url+"'/>");
-
-             var $newItems = $('<div class="element" data-index="'+index+'"><h3 class="user">'+media.user.username+'</h3><img src="'+media.images.low_resolution.url+'"/><div class="info"><div class="cols"></div></div></div>');
-             $wrapper
+            var caption = (media.caption==null? "": media.caption.text) + " via " + media.user.username;
+            var $newItems = $('<div class="element" data-created="'+media.created_time+'" data-uid="'+media.id+'"><a target="_blank" href="'+media.link+'" title="'+caption+'"><img src="'+media.images.low_resolution.url+'" alt="'+caption+'"/></a></div>');
+              $wrapper
               .prepend( $newItems );
           });
           $wrapper.imagesLoaded( function(){
-            $wrapper.isotope( 'reloadItems' ).isotope({ sortBy: 'original-order' }); 
+            $wrapper.isotope( 'reloadItems' ).isotope({ sortBy: 'date',sortAscending: true}); 
             $corner_stamp.prepend("<p>"+$wrapper.data('isotope').$filteredAtoms.length+" elements after prepending</p>");
           });
 
 
         });
-    };
-};
+    }
+  };
 
 $(function(){
 
@@ -46,9 +48,16 @@ $wrapper = $('#wrapper')
 $wrapper.imagesLoaded( function(){
   $wrapper.isotope({
     // options
+    sortAscending: true,
+    getSortData: {
+        date: function ($elem) {
+            return Date($elem.data('created'));
+        }
+    },
     itemSelector : '.element',
     layoutMode : 'fitRows'
   });
+  $wrapper.isotope( 'reloadItems' ).isotope({ sortBy: 'date',sortAscending: true}); 
 });
 
 
