@@ -2,7 +2,6 @@ doctype html
 html
   head
     title Instagram - Real-time updates demo
-    link(rel="stylesheet", href="/static/styles/reset.css", type="text/css")
     link(rel="stylesheet", href="/static/styles/master.css", type="text/css")
     link(rel="stylesheet", href="/static/styles/isotope.css", type="text/css")
     script(src="/socket.io/socket.io.js", type="text/javascript")
@@ -17,4 +16,4 @@ html
           .element(data-created="#{image.created_time}",data-uid="#{image.id}")
             a(href=image.link,title=(image.caption==null?"":image.caption.text)+" via "+image.user.username,target="_blank")
               img(src=image.images.low_resolution.url,alt=(image.caption==null?"":image.caption.text)+" via "+image.user.username)
-      div.corner-stamp
+        div.corner-stamp

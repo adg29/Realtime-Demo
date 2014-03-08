@@ -2,6 +2,32 @@ var socket = io.connect(window.location.origin);
 var $corner_stamp;
 var $wrapper;
 
+
+$.Isotope.prototype._masonryResizeChanged = function() {
+  return true;
+};
+
+$.Isotope.prototype._masonryReset = function() {
+  // layout-specific props
+  this.masonry = {};
+  this._getSegments();
+  var i = this.masonry.cols;
+  this.masonry.colYs = [];
+  while (i--) {
+    this.masonry.colYs.push( 0 );
+  }
+
+  if ( this.options.masonry.cornerStampSelector ) {
+    var $cornerStamp = this.element.find( this.options.masonry.cornerStampSelector ),
+        stampWidth = $cornerStamp.outerWidth(true) - ( this.element.width() % this.masonry.columnWidth ),
+        cornerCols = Math.ceil( stampWidth / this.masonry.columnWidth ),
+        cornerStampHeight = $cornerStamp.outerHeight(true);
+    for ( i = Math.max( this.masonry.cols - cornerCols, cornerCols ); i < this.masonry.cols; i++ ) {
+      this.masonry.colYs[i] = cornerStampHeight;
+    }
+  }
+};
+
 var Media = {
     onNewMedia: function(ev) {
         //console.log(ev);
@@ -53,7 +79,11 @@ $wrapper.imagesLoaded( function(){
         }
     },
     itemSelector : '.element',
-    layoutMode : 'fitRows'
+    masonry: {
+      columnWidth: 4,
+      cornerStampSelector: '.corner-stamp'
+    }
+
   });
   $wrapper.isotope( 'reloadItems' ).isotope({ sortBy: 'date',sortAscending: true}); 
 });
@@ -71,20 +101,12 @@ socket.on('message', function(update){
     data = $.parseJSON(tmp);
     $corner_stamp.prepend("Incoming");
     $corner_stamp.prepend("<pre>"+JSON.stringify(data)+"</pre>");
-    //console.log(data);
+    // console.log(data);
     $(document).trigger(data);
   }catch(e){
     console.log('saved from crying due to parse');
     console.log(tmp);
     console.log(e);
-  }
-  try{
-    console.log('');
-    //console.log('on:message');
-  }catch(e){
-    // console.log('saved from crying due to trigger e');
-    // console.log(data);
-    // console.log(e);
   }
 });
 

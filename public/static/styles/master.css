@@ -7,14 +7,27 @@ body {
 }
 
 #wrap {
-	width: 1040px;
 	margin: 0 auto;
 }
 
 .corner-stamp{
 	height: 300px;
-	overflow: scroll;
-	color: #fff;
+	overflow: hidden;
+	color: #333;
+}
+
+.corner-stamp {
+width: 306px;
+height: 296px;
+padding: 10px;
+position: absolute;
+top: 0px;
+right: 114px;
+background: #222;
+color: white;
+-webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+        border-radius: 5px;
 }
 
 p {
