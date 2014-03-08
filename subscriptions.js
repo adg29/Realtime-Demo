@@ -104,7 +104,7 @@ pubSubClient.on('pmessage', function(pattern, channel, message){
           redis_length = len;
           helpers.debug(redis_length);
           if(redis_length>1700){
-            redisClient.ltrim("media:objects",0,1700,function (err, didSucceed) {
+            redisClient.ltrim("media:objects",0,1200,function (err, didSucceed) {
               helpers.debug('lrendidSucceed'); // true
               helpers.debug(JSON.stringify(err)); // true
               helpers.debug("dddddd " + didSucceed); // true
