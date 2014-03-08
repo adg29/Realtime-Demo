@@ -47,8 +47,11 @@ var Media = {
         .$filteredAtoms.filter( function( i,el ) {
           return i%23 >= 23-newMedia.length;
         });
-
-        var status = "<p class='small'>Removing "+$extraElems.length+" | ";
+        var d = new Date();
+        d.toLocaleString();       // -> "2/1/2013 7:37:08 AM"
+        d.toLocaleDateString();   // -> "2/1/2013"
+        d.toLocaleTimeString();  // -> "7:38:05 AM"
+        var status = "<p class='small'> BEGIN "+d.toLocaleTimeString()+"</p><p class='small'>Removing "+$extraElems.length+" | ";
         $wrapper
         .isotope( 'remove', $extraElems, function() {
           status += " "+$wrapper.data('isotope').$filteredAtoms.length+" instas after removal | ";
@@ -63,7 +66,8 @@ var Media = {
           });
           $wrapper.imagesLoaded( function(){
             $wrapper.isotope( 'reloadItems' ).isotope({ sortBy: 'date',sortAscending: true}); 
-            $corner_stamp.prepend(status+" "+$wrapper.data('isotope').$filteredAtoms.length+" total</p>");
+            var d = new Date();
+            $corner_stamp.prepend(status+" "+$wrapper.data('isotope').$filteredAtoms.length+" total</p><p class='small'>END "+d.toLocaleTimeString()+"</p>");
           });
 
 
