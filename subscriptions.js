@@ -18,8 +18,7 @@ socket.configure(function () {
 });
 
 socket.sockets.on('connection', function (socket) {
-  helpers.debug("sockets connection")
-  helpers.debug(socket);
+  helpers.debug("DONE: sockets connection")
   si_clients[socket.id] = socket;
 });
 
@@ -90,8 +89,12 @@ pubSubClient.on('pmessage', function(pattern, channel, message){
       }
     
     // Store individual media JSON for retrieval by homepage later
+    helpers.debug('Store individual media JSON for retrieval by homepage later');
+    helpers.debug(data);
     for(index in data){
         var media = data[index];
+        helpers.debug('indexmedia');
+        helpers.debug(media);
         media.meta = {};
         media.meta.location = channelName;
         redisClient.lpush('media:objects', JSON.stringify(media));
