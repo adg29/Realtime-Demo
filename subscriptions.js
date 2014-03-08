@@ -37,11 +37,11 @@ if (process.env.REDISTOGO_URL) {
 }
 
 redisClient.on("error", function (err) {
-  debug("ERROR: redisClient subscriptions.js");
-  debug(e);
-  redisClient.flushDB( function (err, didSucceed) {
-    debug('FLUSHDB didSucceed'); // true
-    debug(didSucceed); // true
+  helpers.debug("ERROR: redisClient subscriptions.js");
+  helpers.debug(e);
+  redisClient.lrem('media:objects',-500,function (err, didSucceed) {
+    helpers.debug('lrendidSucceed'); // true
+    helpers.debug(JSON.stringify(didSucceed)); // true
   });
 });
 
@@ -67,6 +67,7 @@ pubSubClient.on("error", function (err) {
 
 
 pubSubClient.psubscribe(subscriptionPattern);
+
 
 pubSubClient.on('pmessage', function(pattern, channel, message){
   helpers.debug("Handling " + pattern + " pmessage: " + message);
@@ -97,6 +98,19 @@ pubSubClient.on('pmessage', function(pattern, channel, message){
         helpers.debug(media);
         media.meta = {};
         media.meta.location = channelName;
+        helpers.debug('redis length');
+        var redis_length;
+        redisClient.llen('media:objects',function(err,len){
+          redis_length = len;
+          helpers.debug(redis_length);
+          if(redis_length>1700){
+            redisClient.ltrim("media:objects",0,1700,function (err, didSucceed) {
+              helpers.debug('lrendidSucceed'); // true
+              helpers.debug(JSON.stringify(err)); // true
+              helpers.debug("dddddd " + didSucceed); // true
+            });
+          }
+        });
         redisClient.lpush('media:objects', JSON.stringify(media));
     }
     
