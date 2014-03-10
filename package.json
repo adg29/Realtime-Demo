@@ -10,7 +10,8 @@
     "url": "*",
     "buffertools": "*",
     "jade": "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "request": "*"
   
   },
   "engines": {
