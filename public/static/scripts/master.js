@@ -34,14 +34,14 @@ var Media = {
         var newMedia = _.reject(ev.media,function(m){
           return _.contains($('.element[data-uid]').map(function(){ return $(this).data('uid')}).get(),m.id);
         });
-        $corner_stamp.prepend("<p>+ "+newMedia.length+" instas</p>");
+        $corner_stamp_status.prepend("<p>+ "+newMedia.length+" instas</p>");
 
         var flat_tags;
         flat_tags = _.reduceRight(newMedia, function(a, b) { 
           return a.concat(b.tags); 
         }, []) 
 
-        $corner_stamp.prepend("<pre>"+flat_tags.join('\n')+"</pre>");
+        $corner_stamp_status.prepend("<pre>"+flat_tags.join('\n')+"</pre>");
 
         var $extraElems = $wrapper.data('isotope')
         .$filteredAtoms.filter( function( i,el ) {
@@ -67,7 +67,7 @@ var Media = {
           $wrapper.imagesLoaded( function(){
             $wrapper.isotope( 'reloadItems' ).isotope({ sortBy: 'date',sortAscending: true}); 
             var d = new Date();
-            $corner_stamp.prepend(status+" "+$wrapper.data('isotope').$filteredAtoms.length+" total</p><p class='small'>END "+d.toLocaleTimeString()+"</p>");
+            $corner_stamp_status.prepend(status+" "+$wrapper.data('isotope').$filteredAtoms.length+" total</p><p class='small'>END "+d.toLocaleTimeString()+"</p>");
           });
 
 
@@ -78,6 +78,7 @@ var Media = {
 $(function(){
 
 $corner_stamp = $('.corner-stamp');
+$corner_stamp_status = $('.corner-stamp .status');
 
 $wrapper = $('#wrapper')
 

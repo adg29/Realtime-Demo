@@ -18,3 +18,17 @@ html
             a(href=image.link,title=(image.caption==null?"":image.caption.text)+" via "+image.user.username,target="_blank")
               img(src=image.images.low_resolution.url,alt=(image.caption==null?"":image.caption.text)+" via "+image.user.username)
         div.corner-stamp
+          div.loading
+            h1.tag #ArmoryShow14 #ArmoryDreamPiece
+            .table.min-h100.center
+                .table-cell
+                    svg.icon-loading(xmlns='http://www.w3.org/2000/svg', viewbox='0 0 32 32')
+                      path(transform='translate(-8 0)', d='M0 12 V20 H8 V12z')
+                        animatetransform(attributename='transform', type='translate', values='-8 0; 2 0; 2 0;', dur='0.8s', repeatcount='indefinite', begin='0', keytimes='0;.25;1', keysplines='0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8', calcmode='spline')
+                      path(transform='translate(2 0)', d='M0 12 V20 H8 V12z')
+                        animatetransform(attributename='transform', type='translate', values='2 0; 12 0; 12 0;', dur='0.8s', repeatcount='indefinite', begin='0', keytimes='0;.35;1', keysplines='0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8', calcmode='spline')
+                      path(transform='translate(12 0)', d='M0 12 V20 H8 V12z')
+                        animatetransform(attributename='transform', type='translate', values='12 0; 22 0; 22 0;', dur='0.8s', repeatcount='indefinite', begin='0', keytimes='0;.45;1', keysplines='0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8', calcmode='spline')
+                      path(transform='translate(24 0)', d='M0 12 V20 H8 V12z')
+                        animatetransform(attributename='transform', type='translate', values='22 0; 32 0; 32 0;', dur='0.8s', repeatcount='indefinite', begin='0', keytimes='0;.55;1', keysplines='0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8', calcmode='spline')
+          div.status

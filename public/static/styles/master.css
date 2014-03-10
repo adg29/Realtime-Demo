@@ -30,8 +30,39 @@ color: white;
         border-radius: 5px;
 }
 
+.loading{
+  height: 150px;
+  background-color: #0fb;
+}
+
+.loading .tag{
+	color: #000;
+	text-align: center;
+	line-height: 29px;
+	margin-bottom: 0px;
+}
+
+.icon-loading {
+  width: 8rem;
+  height: 8rem;
+}
+
+.min-h100 { min-height: 100%; }
+.center { text-align: center; }
+.table {
+  display: table;
+  width: 100%;
+}
+.table-cell {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+
 p.small{
 	font-size: .6em;
+	line-height: 18px;
+	margin-bottom: 1px;
 }
 
 p {
