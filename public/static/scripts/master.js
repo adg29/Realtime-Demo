@@ -72,16 +72,6 @@ $wrapper = $('#wrapper')
 
 var colorThief = new ColorThief();
 
-$('img').on('ab-color-found', function(ev,payload){
-  console.log(payload.color);   // The dominant color in the image.
-  console.log(payload.palette); // The color palette found in the image.
-  console.log(ev);   // The jQuery.Event object
-  for(var c in payload.palette){
-    $('.icon-loading path:eq('+c+')').css('fill',payload.palette[c]);
-  }
- 
-});
-
 $wrapper.imagesLoaded()
 .always(function(instance){
   $wrapper.isotope({
@@ -102,16 +92,13 @@ $wrapper.imagesLoaded()
 })
 .progress( function( instance, image ) {
   var result = image.isLoaded ? 'loaded' : 'broken';
-  // console.log( 'image is ' + result + ' for ' + image.img.src );
-  // console.log(image)
-  // console.log('img[data-uid="'+$(image.img).data('uid')+'"]');
   try{
     var palette = colorThief.getPalette(image.img, 8);;
     for(var c in palette){
       $('.icon-loading path:eq('+c+')').css('fill','rgb('+palette[c][0]+','+palette[c][1]+','+palette[c][2]+')');
     }
   }catch(e){
-    console.log('colorThief')
+    console.log('error:colorThief')
     console.log(e);
   }
 
