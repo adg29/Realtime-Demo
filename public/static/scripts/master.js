@@ -8,17 +8,20 @@ var Media = {
     newMediaToggle: false,
 
     bindNewMediaToggle: function() { 
+      console.log('toggle')
       newMediaToggle ? this.unbindNewMedia() : this.bindNewMedia();
     },
     bindNewMedia: function() { 
       $(document).bind("newMedia", Media.onNewMedia);
       newMediaToggle = true;
       $corner_stamp_status.prepend("<p>Started listening for new instas</p>");
+      console.log(newMediaToggle)
     },
     unbindNewMedia: function() { 
       $(document).unbind("newMedia");
       newMediaToggle = false;
       $corner_stamp_status.prepend("<p>Stopped listening for new instas</p>");
+      console.log(newMediaToggle)
     },
     onNewMedia: function(ev) {
         //console.log(ev);
@@ -51,8 +54,8 @@ var Media = {
         status += " "+$wrapper.isotope('getItemElements').length+" instas after removal | ";
         $(newMedia).each(function(index, media){
           var caption = (media.caption==null? "": media.caption.text) + " via " + media.user.username;
-          var figdesc = (media.caption!=null && media.tags.length < 7 ? media.caption.text : "") + media.tags.join(' ');
-          var figcaption = '<figcaption><h3>'+figdesc+'</h3><span>'+media.user.username+'</span><a target="_blank" href="'+media.link+'" title="'+caption+'">Take a Look</a>'
+          var figdesc = (media.caption!=null && media.tags.length < 7 ?  media.tags.join(' ') + ' <small> ' + media.caption.text + ' </small> ' : media.tags.join(' '));
+          var figcaption = '<figcaption><h3>'+figdesc+'</h3><span>'+media.user.username+'</span><div><a target="_blank" href="'+media.link+'" title="'+caption+'">Take a Look</a></div>'
           var fig = '<figure><div><img data-uid="'+media.id+'" src="'+media.images.low_resolution.url+'" alt="'+caption+'" data-adaptive-background="1"/></div>'+figcaption+'</figure>';
           var $newItems = $('<div class="element" data-created="'+media.created_time+'" data-uid="'+media.id+'">'+fig+'</div>');
           $wrapper.prepend($newItems).isotope('prepended',$newItems );
@@ -130,6 +133,9 @@ socket.on('message', function(update){
 });
 
 window.addEventListener("keydown", keyControls, false);
+$('body').on('hover','figure',function(e){
+  Media.bindNewMediaToggle();
+})
  
 function keyControls(e) {
     switch(e.keyCode) {

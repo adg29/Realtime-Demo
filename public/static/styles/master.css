@@ -86,7 +86,7 @@ Let’s move the image on hover:
 }
  
 #wrap figure:hover img,
-#wrap 4 figure.cs-hover img {
+#wrap figure.cs-hover img {
     -webkit-transform: translateX(25%);
 }
 /*
@@ -168,7 +168,13 @@ color: white;
 }
 
 
-p.small{
+h3 small{
+	font-size: .9em;
+	line-height: 18px;
+	margin-bottom: 1px;
+	
+}
+.small{
 	font-size: .6em;
 	line-height: 18px;
 	margin-bottom: 1px;

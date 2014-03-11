@@ -23,9 +23,10 @@ html
                 img(src=image.images.low_resolution.url,alt=(image.caption==null?"":image.caption.text)+" via "+image.user.username,data-adaptive-background=1,data-uid="#{image.id}")
               figcaption.item-meta
                 // h3 #{(image.caption==null?"":image.caption.text)} + " " + #{image.tags.join(' ')}
-                h3 #{(image.caption!=null && image.tags.length < 7 ? image.caption.text : "") + image.tags.join(' ')}
+                h3!= (image.caption!=null && image.tags.length < 7 ? ' <small> '+ image.caption.text + ' </small> ' + image.tags.join(' ') + ' ' : image.tags.join(' ')) 
                 span #{image.user.username}
-                a(href=image.link,title=(image.caption==null?"":image.caption.text)+" via "+image.user.username,target="_blank") Take a Look
+                div
+                  a(href=image.link,title=(image.caption==null?"":image.caption.text)+" via "+image.user.username,target="_blank") Take a Look
 
 
         // div.stamp
