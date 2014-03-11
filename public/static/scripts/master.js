@@ -35,7 +35,11 @@ var Media = {
 
         $corner_stamp_status.prepend("<pre>"+flat_tags.join('\n')+"</pre>");
 
-        var $extraElems = $wrapper.isotope('getItemElements').slice(0,-23+newMedia.length);
+        var $extraElems = $wrapper.isotope('getItemElements')
+        $extraElems = $extraElems.sort(function(a, b) {
+          return $(a).data('created') - $(b).data('created');
+        })
+        $extraElems = $extraElems.slice(0,-23+newMedia.length);
 
         var d = new Date();
 
@@ -45,7 +49,6 @@ var Media = {
           .isotope('layout'); 
 
         status += " "+$wrapper.isotope('getItemElements').length+" instas after removal | ";
-        console.log(status)
         $(newMedia).each(function(index, media){
           var caption = (media.caption==null? "": media.caption.text) + " via " + media.user.username;
           var media_img = '<img data-uid="'+media.id+'" src="'+media.images.low_resolution.url+'" alt="'+caption+'" data-adaptive-background="1"/>';
