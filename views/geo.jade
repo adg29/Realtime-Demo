@@ -18,8 +18,16 @@ html
         each image,i in images.reverse()
           .grid-sizer 
           .element(data-created="#{image.created_time}",data-uid="#{image.id}")
-            a(href=image.link,title=(image.caption==null?"":image.caption.text)+" via "+image.user.username,target="_blank")
-              img(src=image.images.low_resolution.url,alt=(image.caption==null?"":image.caption.text)+" via "+image.user.username,data-adaptive-background=1,data-uid="#{image.id}")
+            figure
+              div
+                img(src=image.images.low_resolution.url,alt=(image.caption==null?"":image.caption.text)+" via "+image.user.username,data-adaptive-background=1,data-uid="#{image.id}")
+              figcaption.item-meta
+                // h3 #{(image.caption==null?"":image.caption.text)} + " " + #{image.tags.join(' ')}
+                h3 #{image.tags.join(' ')}
+                span #{image.user.username}
+                a(href=image.link,title=(image.caption==null?"":image.caption.text)+" via "+image.user.username,target="_blank") Take a Look
+
+
         // div.stamp
           div.loading
             h1.tag #ArmoryShow14 #ArmoryDreamPiece

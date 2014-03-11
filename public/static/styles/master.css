@@ -18,6 +18,107 @@ body {
   .grid-sizer { width: 10%; }
 }
 
+
+#wrap figure {
+    margin: 0;
+    position: relative;
+}
+/*
+The image will have a maximum width of 100% which will come in handy when we define a media query to resize the list items:
+*/
+#wrap figure img {
+    max-width: 100%;
+    display: block;
+    position: relative;
+}
+/*
+The figcaption will be positioned absolutely. By default it will be positioned in the top left corner. We won’t define any width or height here as we will do so in all the individual styles:
+*/
+#wrap figcaption {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    background: #2c3f52;
+    color: #ed4e6e;
+}
+#wrap figcaption h3 {
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+ 
+#wrap figcaption span:before {
+    content: 'by ';
+}
+ 
+#wrap figcaption a {
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: 2px;
+    display: inline-block;
+    background: #ed4e6e;
+    color: #fff;
+}
+
+#wrap .element{
+    -webkit-perspective: 1700px;
+    -webkit-perspective-origin: 0 50%;
+}
+
+#wrap figure {
+-webkit-transform-style: preserve-3d;
+-moz-transform-style: preserve-3d;
+transform-style: preserve-3d;
+	width: 100%;
+	height: 100%;
+}
+
+
+#wrap figure > div {
+    overflow: hidden;
+}
+/*
+Let’s move the image on hover:
+*/
+#wrap figure img{
+    -webkit-transition: -webkit-transform 0.4s;
+}
+ 
+#wrap figure:hover img,
+#wrap 4 figure.cs-hover img {
+    -webkit-transform: translateX(25%);
+}
+/*
+The figcaption will have half of the width of the figure and we’ll set its initial opacity to 0. Now, let’s rotate it 90 degrees on the Y-axis which will make it be flipped towards us with the origin on its left side. We would basically not see it like that. Let’s set a transition for the “hover out” which will work in the same principle like described in the previous example:
+*/
+#wrap figcaption {
+    height: 100%;
+    width: 50%;
+    opacity: 0;
+    -webkit-backface-visibility: hidden;
+    -webkit-transform-origin: 0 0;
+    -webkit-transform: rotateY(-90deg);
+    -webkit-transition: -webkit-transform 0.4s, opacity 0.1s 0.3s;
+}
+/*
+On hover we will fade it in and rotate it to 0 degrees, making it flip like a page of a book from the left side:
+*/
+#wrap figure:hover figcaption,
+#wrap figure.cs-hover figcaption {
+    opacity: 1;
+    -webkit-transform: rotateY(0deg);
+    -webkit-transition: -webkit-transform 0.4s, opacity 0.1s;
+}
+/*
+Last, but not least, our little link button:
+*/
+.cs-style-4 figcaption a {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
 .stamp{
 	height: 300px;
 	overflow: hidden;
