@@ -10,13 +10,21 @@ body {
 	margin: 0 auto;
 }
 
-.corner-stamp{
+/* 5 columns by default */
+.grid-sizer { width: 20%; }
+
+@media screen and (min-width: 720px) {
+  /* 10 columns for larger screens */
+  .grid-sizer { width: 10%; }
+}
+
+.stamp{
 	height: 300px;
 	overflow: hidden;
 	color: #333;
 }
 
-.corner-stamp {
+.stamp {
 width: 306px;
 height: 296px;
 padding: 10px;

@@ -8,16 +8,19 @@ html
     script(src="/static/scripts/jquery-1.5.min.js", type="text/javascript")
     script(src="/static/scripts/underscore.js", type="text/javascript")
     script(src="/static/scripts/isotope.js", type="text/javascript")
+    script(src="/static/scripts/imagesloaded.js", type="text/javascript")
     script(src="/static/scripts/master.js", type="text/javascript")
+    script(src="/static/scripts/color-thief.js", type="text/javascript")
     script(src="/static/scripts/analytics.js", type="text/javascript")
   body
     #wrap
       div#wrapper
         each image,i in images.reverse()
+          .grid-sizer 
           .element(data-created="#{image.created_time}",data-uid="#{image.id}")
             a(href=image.link,title=(image.caption==null?"":image.caption.text)+" via "+image.user.username,target="_blank")
-              img(src=image.images.low_resolution.url,alt=(image.caption==null?"":image.caption.text)+" via "+image.user.username)
-        div.corner-stamp
+              img(src=image.images.low_resolution.url,alt=(image.caption==null?"":image.caption.text)+" via "+image.user.username,data-adaptive-background=1,data-uid="#{image.id}")
+        // div.stamp
           div.loading
             h1.tag #ArmoryShow14 #ArmoryDreamPiece
             .table.min-h100.center

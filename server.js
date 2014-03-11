@@ -7,13 +7,24 @@
 
 var url = require('url'),
   redis = require('redis'),
+  http = require('request'),
   settings = require('./settings'),
   helpers = require('./helpers'),
   subscriptions = require('./subscriptions');
 var buffertools = require('buffertools');
 
 var app = settings.app;
+var server = settings.server;
 
+app.get('/proxied_image/:image_url', function(req, res){
+  helpers.debug("Starting proxy");
+  var image_url = req.params.image_url;
+ 
+  http({url:image_url,encoding:null},function(e,r,b){
+      var encoding = (r.headers['content-type'].indexOf('image') === -1) ? 'utf8' : 'binary';
+      res.end(b, encoding);
+    });
+});
 
 app.get('/callbacks/geo/:geoName', function(request, response){
     // The GET callback for each subscription verification.
@@ -109,6 +120,11 @@ app.get('/', function(request, response){
   helpers.getMedia(function(error, media){
   helpers.debug('got media');
   helpers.debug(media);
+  for(var m in media){
+    media[m].images.low_resolution.url = "/proxied_image/" + encodeURIComponent(media[m].images.low_resolution.url);
+    helpers.debug('***********Adddddafads');
+    helpers.debug(media[m].images.low_resolution.url);
+  }
   response.render('geo', {
         images: media 
     });
