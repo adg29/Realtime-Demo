@@ -51,8 +51,10 @@ var Media = {
         status += " "+$wrapper.isotope('getItemElements').length+" instas after removal | ";
         $(newMedia).each(function(index, media){
           var caption = (media.caption==null? "": media.caption.text) + " via " + media.user.username;
-          var media_img = '<img data-uid="'+media.id+'" src="'+media.images.low_resolution.url+'" alt="'+caption+'" data-adaptive-background="1"/>';
-          var $newItems = $('<div class="element" data-created="'+media.created_time+'" data-uid="'+media.id+'"><a target="_blank" href="'+media.link+'" title="'+caption+'">'+media_img+'</a></div>');
+          var figdesc = (media.caption!=null && media.tags.length < 7 ? media.caption.text : "") + media.tags.join(' ');
+          var figcaption = '<figcaption><h3>'+figdesc+'</h3><span>'+media.user.username+'</span><a target="_blank" href="'+media.link+'" title="'+caption+'">Take a Look</a>'
+          var fig = '<figure><div><img data-uid="'+media.id+'" src="'+media.images.low_resolution.url+'" alt="'+caption+'" data-adaptive-background="1"/></div>'+figcaption+'</figure>';
+          var $newItems = $('<div class="element" data-created="'+media.created_time+'" data-uid="'+media.id+'">'+fig+'</div>');
           $wrapper.prepend($newItems).isotope('prepended',$newItems );
         });
         $wrapper.imagesLoaded( function(){
