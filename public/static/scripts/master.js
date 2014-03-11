@@ -54,7 +54,7 @@ var Media = {
         status += " "+$wrapper.isotope('getItemElements').length+" instas after removal | ";
         $(newMedia).each(function(index, media){
           var caption = (media.caption==null? "": media.caption.text) + " via " + media.user.username;
-          var figdesc = (media.caption!=null && media.tags.length < 7 ?  media.tags.join(' ') + ' <small> ' + media.caption.text + ' </small> ' : media.tags.join(' '));
+          var figdesc = (media.caption!=null && media.tags.length < 7 ?  media.tags.join(' ') + ' <br/><small> ' + media.caption.text + ' </small> ' : media.tags.join(' '));
           var figcaption = '<figcaption><h3>'+figdesc+'</h3><span>'+media.user.username+'</span><div><a target="_blank" href="'+media.link+'" title="'+caption+'">Take a Look</a></div>'
           var fig = '<figure><div><img data-uid="'+media.id+'" src="'+media.images.low_resolution.url+'" alt="'+caption+'" data-adaptive-background="1"/></div>'+figcaption+'</figure>';
           var $newItems = $('<div class="element" data-created="'+media.created_time+'" data-uid="'+media.id+'">'+fig+'</div>');
