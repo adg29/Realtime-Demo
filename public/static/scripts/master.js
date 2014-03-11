@@ -42,7 +42,7 @@ var Media = {
         $extraElems = $extraElems.sort(function(a, b) {
           return $(a).data('created') - $(b).data('created');
         })
-        $extraElems = $extraElems.slice(0,-23+newMedia.length);
+        $extraElems = $extraElems.slice(0,-24+newMedia.length);
 
         var d = new Date();
 
