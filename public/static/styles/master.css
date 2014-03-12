@@ -2,7 +2,6 @@
 
 body {
 	font-family: "Helvetica Neue", Helvetica;
-	font-size: 100%;
 	background-color: #222;
 }
 
@@ -31,10 +30,21 @@ The image will have a maximum width of 100% which will come in handy when we def
     display: block;
     position: relative;
 }
+
+#wrap figcaption.item-time{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 7px;
+    background: transparent;
+    color: #ed4e6e;
+    font-size: .8em;
+    line-height: 10px;
+}
 /*
 The figcaption will be positioned absolutely. By default it will be positioned in the top left corner. We won’t define any width or height here as we will do so in all the individual styles:
 */
-#wrap figcaption {
+#wrap figcaption.item-meta{
     position: absolute;
     top: 0;
     left: 0;
@@ -92,7 +102,7 @@ Let’s move the image on hover:
 /*
 The figcaption will have half of the width of the figure and we’ll set its initial opacity to 0. Now, let’s rotate it 90 degrees on the Y-axis which will make it be flipped towards us with the origin on its left side. We would basically not see it like that. Let’s set a transition for the “hover out” which will work in the same principle like described in the previous example:
 */
-#wrap figcaption {
+#wrap figcaption.item-meta{
     height: 100%;
     width: 50%;
     opacity: 0;
@@ -101,11 +111,17 @@ The figcaption will have half of the width of the figure and we’ll set its ini
     -webkit-transform: rotateY(-90deg);
     -webkit-transition: -webkit-transform 0.4s, opacity 0.1s 0.3s;
 }
+#wrap figcaption.item-time{
+    height: 10%;
+    width: 30%;
+    opacity: 100;
+    -webkit-backface-visibility: hidden;
+}
 /*
 On hover we will fade it in and rotate it to 0 degrees, making it flip like a page of a book from the left side:
 */
-#wrap figure:hover figcaption,
-#wrap figure.cs-hover figcaption {
+#wrap figure:hover figcaption.item-meta,
+#wrap figure.cs-hover figcaption.item-meta{
     opacity: 1;
     -webkit-transform: rotateY(0deg);
     -webkit-transition: -webkit-transform 0.4s, opacity 0.1s;
@@ -169,7 +185,7 @@ color: white;
 
 
 h3 small{
-	font-size: .8em;
+	font-size: .85em;
 	margin-bottom: 1px;
 	font-weight: lighter;
 	clear: both;
@@ -180,6 +196,179 @@ h3 small{
 	line-height: 18px;
 	margin-bottom: 1px;
 }
+
+
+
+/* Effect 2: 3D rolling links, idea from http://hakim.se/thoughts/rolling-links */
+
+section#update-status{
+	clear: both;
+}
+
+.cl-effect-2 a {
+	line-height: 44px;
+	-webkit-perspective: 1000px;
+	-moz-perspective: 1000px;
+	perspective: 1000px;
+}
+
+.cl-effect-2 a span {
+	position: relative;
+	display: inline-block;
+	padding: 0 14px;
+	background: #2195de;
+	-webkit-transition: -webkit-transform 0.3s;
+	-moz-transition: -moz-transform 0.3s;
+	transition: transform 0.3s;
+	-webkit-transform-origin: 50% 0;
+	-moz-transform-origin: 50% 0;
+	transform-origin: 50% 0;
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+
+.csstransforms3d .cl-effect-2 a span::before {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #222;
+	content: attr(data-hover);
+	-webkit-transition: background 0.3s;
+	-moz-transition: background 0.3s;
+	transition: background 0.3s;
+	-webkit-transform: rotateX(-90deg);
+	-moz-transform: rotateX(-90deg);
+	transform: rotateX(-90deg);
+	-webkit-transform-origin: 50% 0;
+	-moz-transform-origin: 50% 0;
+	transform-origin: 50% 0;
+}
+
+.cl-effect-2 a.hover span,
+.cl-effect-2 a:hover span,
+.cl-effect-2 a:focus span {
+	-webkit-transform: rotateX(90deg) translateY(-29px);
+	-moz-transform: rotateX(90deg) translateY(-22px);
+	transform: rotateX(90deg) translateY(-22px);
+}
+
+.csstransforms3d .cl-effect-2 a.hover span::before,
+.csstransforms3d .cl-effect-2 a:hover span::before,
+.csstransforms3d .cl-effect-2 a:focus span::before {
+	background: #28a2ee;	
+}
+
+.color-1 {
+	background: #435a6b;
+}
+
+.color-2 {
+	background: #f39c12;
+}
+
+.color-3 {
+	background: #2ac56c;
+}
+
+.color-4 {
+	background: #0e83cd;
+}
+
+.color-5 {
+	background: #cd4436;
+}
+
+.color-6 {
+	background: #f19f0f;
+}
+
+.color-7 {
+	background: #3fa46a;
+}
+
+.color-8 {
+	background: #ecf0f1;
+}
+
+.color-9 {
+	/*
+	background: #9e487f;
+	*/
+}
+
+.color-10 {
+	background: #16a085;
+}
+
+.color-11 {
+	background: #aab7b7;
+}
+
+.container > section p {
+	color: #fff;
+	font-size: 1.3em;
+	font-weight: 300;
+}
+
+.container > section p a {
+	color: #fff;
+	font-weight: 700;
+}
+
+.container > section p a:hover {
+	color: #0c69a4;
+}
+
+
+/*
+Creative links
+*/
+
+.container > section#update-status {
+	text-align: center;
+}
+
+
+section#update-status *,
+section#update-status *:after,
+section#update-status *::before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
+section#update-status 
+nav a {
+	position: relative;
+	display: inline-block;
+	margin: 15px 25px;
+	outline: none;
+	color: #fff;
+	text-decoration: none;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-weight: 400;
+	text-shadow: 0 0 1px rgba(255,255,255,0.3);
+	font-size: 1.35em;
+}
+
+section#update-status 
+nav a:hover,
+section#update-status 
+nav a:focus {
+	outline: none;
+}
+
+
+/*
+Creative links
+*/
+
+
 
 p {
 	font-size: .8125em;
@@ -205,13 +394,7 @@ h2 {
 	line-height: 27px;
 	margin-bottom: 9px;
 }
-a {
-	color:  #eee;
-	text-decoration: none;
-}
-a:hover {
-	text-decoration: underline;
-}
+
 
 .cols {
 	padding: 20px 10px;
@@ -267,19 +450,6 @@ a:hover {
   right: 0;
   bottom: 17px;
   font-weight:bold;
-}
-.container {
-	position: absolute;
-	height: 200px;
-	width: 200px;
-	z-index: 100;
-	font-size: .625em; /* 10/16 */
-}
-
-.container.animating {
-	-webkit-transform: translateZ(-10em);
-	-webkit-transform-style: preserve-3d;
-	z-index: -100;
 }
 
 .in, .out {

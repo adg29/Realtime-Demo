@@ -2,25 +2,30 @@ var socket = io.connect(window.location.origin);
 var $corner_stamp;
 var $wrapper;
 
-
 var Media = {
 
     newMediaToggle: false,
 
     bindNewMediaToggle: function() { 
       console.log('toggle')
+      $('a.updates-toggle').toggleClass('hover')
       newMediaToggle ? this.unbindNewMedia() : this.bindNewMedia();
+      //$('a.updates-toggle').delay(400).toggleClass('hover')
     },
     bindNewMedia: function() { 
       $(document).bind("newMedia", Media.onNewMedia);
       newMediaToggle = true;
       $corner_stamp_status.prepend("<p>Started listening for new instas</p>");
+      // $('a.updates-toggle span').text('Updates On')
+      // $('a.updates-toggle span').data('hover','Updates Off')
       console.log(newMediaToggle)
     },
     unbindNewMedia: function() { 
       $(document).unbind("newMedia");
       newMediaToggle = false;
       $corner_stamp_status.prepend("<p>Stopped listening for new instas</p>");
+      // $('a.updates-toggle span').text('Updates Off')
+      // $('a.updates-toggle span').data('hover','Updates On')
       console.log(newMediaToggle)
     },
     onNewMedia: function(ev) {
@@ -55,13 +60,16 @@ var Media = {
         $(newMedia).each(function(index, media){
           var caption = (media.caption==null? "": media.caption.text) + " via " + media.user.username;
           var figdesc = (media.caption!=null && media.tags.length < 7 ?  media.tags.join(' ') + ' <br/><small> ' + media.caption.text + ' </small> ' : media.tags.join(' '));
-          var figcaption = '<figcaption><h3>'+figdesc+'</h3><span>'+media.user.username+'</span><div><a target="_blank" href="'+media.link+'" title="'+caption+'">Take a Look</a></div>'
-          var fig = '<figure><div><img data-uid="'+media.id+'" src="'+media.images.low_resolution.url+'" alt="'+caption+'" data-adaptive-background="1"/></div>'+figcaption+'</figure>';
+          var figtime = '<a target="_blank" href="'+media.link+'" title="'+caption+'">'+moment.unix(parseInt(media.created_time)).fromNoww()+'</a>';
+          var figcaption = '<figcaption class="item-meta"><h3>'+figdesc+'</h3><span>'+media.user.username+'</span><div><a target="_blank" href="'+media.link+'" title="'+caption+'">Take a Look</a></div>'
+          var figcaption_time = '<figcaption class="item-time"><h5>'+figtime+'</h5></figcaption>'
+ 
+          var fig = '<figure><div><img data-uid="'+media.id+'" src="'+media.images.low_resolution.url+'" alt="'+caption+'" data-adaptive-background="1"/></div>'+figcaption_time+figcaption+'</figure>';
           var $newItems = $('<div class="element" data-created="'+media.created_time+'" data-uid="'+media.id+'">'+fig+'</div>');
           $wrapper.prepend($newItems).isotope('prepended',$newItems );
         });
         $wrapper.imagesLoaded( function(){
-          $wrapper.isotope({ sortBy: 'date',sortAscending: false}); 
+          $wrapper.isotope({ sortBy: 'date',sortAscending: true}); 
           var d = new Date();
           $corner_stamp_status.prepend(status+" "+$wrapper.isotope('getItemElements').length+" total</p><p class='small'>END "+d.toLocaleTimeString()+"</p>");
         });
@@ -84,7 +92,7 @@ $wrapper.imagesLoaded()
 .always(function(instance){
   $wrapper.isotope({
     // options
-    sortAscending: false,
+    sortAscending: true,
     getSortData: {
         date: function (el) {
             return Date($(el).data('created'));
@@ -96,7 +104,7 @@ $wrapper.imagesLoaded()
     }
 
   });
-  $wrapper.isotope({ sortBy: 'date',sortAscending: false}); 
+  $wrapper.isotope({ sortBy: 'date',sortAscending: true}); 
 })
 .progress( function( instance, image ) {
   var result = image.isLoaded ? 'loaded' : 'broken';
@@ -133,7 +141,8 @@ socket.on('message', function(update){
 });
 
 window.addEventListener("keydown", keyControls, false);
-$('body').on('hover','figure',function(e){
+
+$('body').on('click','a.updates-toggle',function(e){
   Media.bindNewMediaToggle();
 })
  
@@ -141,7 +150,9 @@ function keyControls(e) {
     switch(e.keyCode) {
         case 32:
             // spacebar pressed
+            e.preventDefault();
             Media.bindNewMediaToggle();
+            return false;
             break;
         case 37:
             // left key pressed
@@ -154,6 +165,16 @@ function keyControls(e) {
     }   
 }
 
+
+moment.fn.fromNoww = function (a) {
+    if (Math.abs(moment().diff(this)) <= 1000) { // 1000 milliseconds
+        return 'just now';
+    }
+    if (Math.abs(moment().diff(this)) < 60000) { // 1000 milliseconds
+        return Math.floor(Math.abs(moment.duration(this.diff(a)).asSeconds()))  + ' seconds ago';//this.fromNow();
+    }
+    return this.fromNow(a);
+}
 
 
 Media.bindNewMedia();

@@ -1,6 +1,7 @@
 var redis = require('redis');
 var settings = require('./settings');
 var crypto = require('crypto');
+var settings = require('./settings');
 var redisClient;
 
 if (process.env.REDISTOGO_URL) {
@@ -20,6 +21,16 @@ redisClient.on("error", function (err) {
   });
 });
 
+
+settings.moment.fn.fromNoww = function (a) {
+    if (Math.abs(settings.moment().diff(this)) <= 1000) { // 1000 milliseconds
+        return 'just now';
+    }
+    if (Math.abs(settings.moment().diff(this)) < 60000) { // 1000 milliseconds
+        return Math.floor(Math.abs(settings.moment.duration(this.diff(a)).asSeconds()))  + ' seconds ago';//this.fromNow();
+    }
+    return this.fromNow(a);
+}
 
 /*
 function isValidRequest(request) {

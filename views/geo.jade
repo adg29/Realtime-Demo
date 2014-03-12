@@ -1,7 +1,7 @@
 doctype html
-html
+html.csstransforms3d
   head
-    title Instagram - Real-time updates demo
+    title #ArmoryShow14 Instagram Real-time Updates
     link(rel="stylesheet", href="/static/styles/master.css", type="text/css")
     link(rel="stylesheet", href="/static/styles/isotope.css", type="text/css")
     script(src="/socket.io/socket.io.js", type="text/javascript")
@@ -9,11 +9,29 @@ html
     script(src="/static/scripts/underscore.js", type="text/javascript")
     script(src="/static/scripts/isotope.js", type="text/javascript")
     script(src="/static/scripts/imagesloaded.js", type="text/javascript")
+    script(src="/static/scripts/moment.js", type="text/javascript")
     script(src="/static/scripts/master.js", type="text/javascript")
     script(src="/static/scripts/color-thief.js", type="text/javascript")
     script(src="/static/scripts/analytics.js", type="text/javascript")
+
+
   body
-    #wrap
+    #wrap.container
+      section#update-status
+        nav#cl-effect-2.cl-effect-2
+          a 
+            span(data-hover="Live") #ArmoryShow14
+          a.updates-toggle 
+            span(data-hover="Updates Off") Updates On
+      // nav#menu-6.st-menu.st-effect-6
+        h2.icon.icon-stack Sidebar
+        ul
+          li 
+            a.icon.icon-data Data Management
+            a.icon.icon-data Data Management
+            a.icon.icon-data Data Management
+            a.icon.icon-data Data Management
+            a.icon.icon-data Data Management
       div#wrapper
         each image,i in images.reverse()
           .grid-sizer 
@@ -21,6 +39,10 @@ html
             figure
               div
                 img(src=image.images.low_resolution.url,alt=(image.caption==null?"":image.caption.text)+" via "+image.user.username,data-adaptive-background=1,data-uid="#{image.id}")
+              figcaption.item-time
+                h4
+                  a(href=image.link,title=(image.caption==null?"":image.caption.text)+" via "+image.user.username,target="_blank")
+                    != moment.unix(parseInt(image.created_time)).fromNoww()
               figcaption.item-meta
                 // h3 #{(image.caption==null?"":image.caption.text)} + " " + #{image.tags.join(' ')}
                 h3!= (image.caption!=null && image.tags.length < 7 ? image.tags.join(' ') + ' <br/><small> ' + image.caption.text + ' </small> ' : image.tags.join(' ')) 
@@ -28,12 +50,11 @@ html
                 div
                   a(href=image.link,title=(image.caption==null?"":image.caption.text)+" via "+image.user.username,target="_blank") Take a Look
 
-
         // div.stamp
           div.loading
             h1.tag #ArmoryShow14 #ArmoryDreamPiece
             .table.min-h100.center
-                .table-cell
+              .table-cell
                     svg.icon-loading(xmlns='http://www.w3.org/2000/svg', viewbox='0 0 32 32')
                       path(transform='translate(-8 0)', d='M0 12 V20 H8 V12z')
                         animatetransform(attributename='transform', type='translate', values='-8 0; 2 0; 2 0;', dur='0.8s', repeatcount='indefinite', begin='0', keytimes='0;.25;1', keysplines='0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8', calcmode='spline')

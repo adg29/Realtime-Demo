@@ -19,8 +19,12 @@ exports.REDIS_HOST = '127.0.0.1';
 exports.debug = true;
 
 server.listen(exports.appPort);
-
 app.set('view engine', 'jade');
+
+	
+var moment = require('moment');
+exports.moment = moment;
+app.locals.moment = moment;
 
 app.configure(function(){
     app.use(express.methodOverride());
