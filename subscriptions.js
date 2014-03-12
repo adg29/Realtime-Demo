@@ -70,7 +70,7 @@ pubSubClient.psubscribe(subscriptionPattern);
 
 
 pubSubClient.on('pmessage', function(pattern, channel, message){
-  helpers.debug("Handling " + pattern + " pmessage: " + message);
+  //helpers.debug("Handling " + pattern + " pmessage: " + message);
 
   /* Every time we receive a message, we check to see if it matches
      the subscription pattern. If it does, then go ahead and parse it. */
@@ -91,7 +91,8 @@ pubSubClient.on('pmessage', function(pattern, channel, message){
     
     // Store individual media JSON for retrieval by homepage later
     helpers.debug('Store individual media JSON for retrieval by homepage later');
-    helpers.debug(data);
+    helpers.debug(channelName);
+    //helpers.debug(data);
     for(index in data){
         var media = data[index];
         helpers.debug('indexmedia');
@@ -105,13 +106,13 @@ pubSubClient.on('pmessage', function(pattern, channel, message){
           helpers.debug(redis_length);
           if(redis_length>1700){
             redisClient.ltrim("media:objects",0,1200,function (err, didSucceed) {
-              helpers.debug('lrendidSucceed'); // true
+              helpers.debug('ltrimDidSucceed'); // true
               helpers.debug(JSON.stringify(err)); // true
-              helpers.debug("dddddd " + didSucceed); // true
+              helpers.debug(didSucceed); // true
             });
           }
         });
-        redisClient.lpush('media:objects', JSON.stringify(media));
+        redisClient.lpush('media:'+channelName, JSON.stringify(media));
     }
     
     // Send out whole update to the listeners
@@ -120,7 +121,6 @@ pubSubClient.on('pmessage', function(pattern, channel, message){
       'media': data,
       'channelName': channelName
     };
-    helpers.debug('socket.clients for each')
     for(sessionId in si_clients){
       try{
         helpers.debug('try socket clients send') 

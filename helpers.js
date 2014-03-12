@@ -93,8 +93,30 @@ function debug(msg) {
 }
 exports.debug = debug;
 
+function getMedia(hashtag,callback){
+    // This function gets the most recent media stored in redis
+  var hashtag_items = 23;
+  redisClient.lrange('media:'+hashtag, 0, hashtag_items, function(error, media){
+
+
+      debug("getMedia: got " + media.length + " items");
+      debug('redisMedia')
+      // Parse each media JSON to send to callback
+      media = media.map(function(json){return JSON.parse(json);});
+      debug(media.length)
+      if(media.length < hashtag_items){
+      //if(media.length == 0 ){
+        callback(error, processTag(hashtag,"manual"));
+      }else{
+        callback(error, media);
+      }
+  });
+}
+exports.getMedia = getMedia;
+
+
 function processTag(tag, update){
-  var path = '/v1/tags/' + update.object_id + '/media/recent/';
+  var path = '/v1/tags/' + tag + '/media/recent/';
   getMinID(tag, function(error, minID){
     var queryString = "?client_id="+ settings.CLIENT_ID;
     if(minID){
@@ -141,7 +163,13 @@ function processTag(tag, update){
         // Let all the redis listeners know that we've got new media.
         try{
           redisClient.publish('channel:' + tag , data);
-          debug("*********Published: " + data);
+          debug("*********Published: " + tag );
+          debug("*********Published: " + data.length);
+          if(update=="manual") {
+            debug("*******manual: " + tag);
+            debug("*********manual: " + data.length);
+            return parsedResponse;
+          }
         }catch(e){
           debug("REDIS ERROR: redisClient.publish('channel:' + tag, data)");
           debug(e);
@@ -230,21 +258,6 @@ function processGeography(geoName, update){
   //debug("Processed " + updates.length + " updates");
 }
 exports.processGeography = processGeography;
-
-function getMedia(callback){
-    // This function gets the most recent media stored in redis
-  redisClient.lrange('media:objects', 0, 23, function(error, media){
-
-
-      debug("getMedia: got " + media.length + " items");
-      debug('redisMedia')
-      // Parse each media JSON to send to callback
-      media = media.map(function(json){return JSON.parse(json);});
-      callback(error, media);
-  });
-}
-exports.getMedia = getMedia;
-
 /*
     In order to only ask for the most recent media, we store the MAXIMUM ID
     of the media for every geography we've fetched. This way, when we get an

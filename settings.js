@@ -30,16 +30,16 @@ app.configure(function(){
     app.use(express.methodOverride());
 	// For Express 3 (won't work with express 2.x)
 	app.use (function(req, res, next) {
-	    console.log('mw collecting data');
+	    //console.log('mw collecting data');
 	    var data = '';
 	    req.setEncoding('utf8');
 	    req.on('data', function(chunk) { 
 	       data += chunk;
 	    });
 	    req.on('end', function() {
-	    	console.log('mw end collecting data');
-	        console.log(data);
-	    	console.log('/mw end collecting data');
+	    	//console.log('mw end collecting data');
+	        //console.log(data);
+	    	//console.log('/mw end collecting data');
 	        req.rawBody = data;
 	        next();
 	    });

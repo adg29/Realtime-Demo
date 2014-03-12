@@ -113,22 +113,51 @@ app.post('/webhooks', function(request, response){
   response.send('OK');
 });
 
+var getMedia = function(hashtag){
+}
+
 
 // Render the home page
-app.get('/', function(request, response){
-  helpers.debug("render homepage");
-  helpers.getMedia(function(error, media){
-  helpers.debug('got media');
-  helpers.debug(media);
-  for(var m in media){
-    media[m].images.low_resolution.url = "/proxied_image/" + encodeURIComponent(media[m].images.low_resolution.url);
-    helpers.debug('***********Adddddafads');
-    helpers.debug(media[m].images.low_resolution.url);
-  }
-  response.render('geo', {
-        images: media 
+app.get('/updates/:hashtag', function(request, response){
+  var media_res = [];
+  var hashtag_resp = request.params.hashtag;
+  helpers.getMedia(hashtag_resp,function(error, media){
+    media_res = typeof media !== 'undefined' ? media : [].reverse();
+    for(var m in media_res){
+      media_res[m].images.low_resolution.url = "/proxied_image/" + encodeURIComponent(media_res[m].images.low_resolution.url);
+    }
+
+    response.render('geo', {
+          images: media_res,
+          hashtag: hashtag_resp
     });
   });
 });
 
-//app.listen(settings.appPort);
+app.get('/', function(request, response){ 
+  var media_res = [];
+  var hashtag_resp = "armoryshow";
+  helpers.getMedia(hashtag_resp,function(error, media){
+    media_res = typeof media !== 'undefined' ? media : [].reverse();
+    for(var m in media_res){
+      media_res[m].images.low_resolution.url = "/proxied_image/" + encodeURIComponent(media_res[m].images.low_resolution.url);
+    }
+
+    response.render('geo', {
+          images: media_res,
+          hashtag: hashtag_resp
+    });
+  });
+});
+
+// // Render the home page
+// app.get('/updates/:hashtag', function(request, response){
+//   response.render('geo', {
+//         images: getMedia(request.params.hashtag)
+//   });
+// });
+// app.get('/', function(request, response){ 
+//   response.render('geo', {
+//         images: getMedia('armoryshow')
+//   });
+// });
