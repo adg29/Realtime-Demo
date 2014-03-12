@@ -11,8 +11,8 @@
     "buffertools": "*",
     "jade": "*",
     "socket.io": "*",
-    "request": "*"
-  
+    "request": "*",
+    "moment": "*"
   },
   "engines": {
     "node": "0.6.18",

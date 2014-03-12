@@ -6,6 +6,8 @@ export IG_CLIENT_SECRET="ace1dd176b674b75879a14d4fd175962"
 alias sub_delete='curl -X DELETE  "https://api.instagram.com/v1/subscriptions?object=all&client_id=$IG_CLIENT_ID&client_secret=$IG_CLIENT_SECRET"'
 alias sub_list='curl "https://api.instagram.com/v1/subscriptions?client_id=$IG_CLIENT_ID&client_secret=$IG_CLIENT_SECRET"'
 
+
+alias sub_sxswwhat='curl -F "client_id=$IG_CLIENT_ID"      -F "client_secret=$IG_CLIENT_SECRET"      -F "object=tag"      -F "aspect=media"      -F "object_id=SXSWhathappenedlastnight"      -F "callback_url=$IG_CALLBACK_HOST/callbacks/tag/SXSWhathappenedlastnight/"      https://api.instagram.com/v1/subscriptions/'
 alias sub_sxsw='curl -F "client_id=$IG_CLIENT_ID"      -F "client_secret=$IG_CLIENT_SECRET"      -F "object=tag"      -F "aspect=media"      -F "object_id=sxsw"      -F "callback_url=$IG_CALLBACK_HOST/callbacks/tag/sxsw/"      https://api.instagram.com/v1/subscriptions/'
 alias sub_armorydream='curl -F "client_id=$IG_CLIENT_ID"      -F "client_secret=$IG_CLIENT_SECRET"      -F "object=tag"      -F "aspect=media"      -F "object_id=armorydreampiece"      -F "callback_url=$IG_CALLBACK_HOST/callbacks/tag/armorydreampiece/"      https://api.instagram.com/v1/subscriptions/'
 alias sub_armoryshow='curl -F "client_id=$IG_CLIENT_ID"      -F "client_secret=$IG_CLIENT_SECRET"      -F "object=tag"      -F "aspect=media"      -F "object_id=armoryshow"      -F "callback_url=$IG_CALLBACK_HOST/callbacks/tag/armoryshow/"      https://api.instagram.com/v1/subscriptions/'
