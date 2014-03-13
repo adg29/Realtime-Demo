@@ -112,7 +112,18 @@ app.post('/webhooks', function(request, response){
   response.send('OK');
 });
 
-var getMedia = function(hashtag){
+var subscribe = function(hashtag,host){
+  var options = {url:settings.apiHost+"/v1/subscriptions",form:{object:'tag',aspect:'media',object_id:hashtag,callback_url:'http://'+host+'/callbacks/tag/'+hashtag,client_id:settings.IG_CLIENT_ID,client_secret:settings.IG_CLIENT_SECRET}};
+  helpers.debug('subscribe:')
+  helpers.debug(options)
+  http.post(options,function(e,i,r){
+    helpers.debug('error')
+    helpers.debug(e)
+    helpers.debug('incoming')
+    helpers.debug(i)
+    helpers.debug('response')
+    helpers.debug(r)
+  });
 }
 
 
@@ -120,6 +131,7 @@ var getMedia = function(hashtag){
 app.get('/updates/:hashtag', function(request, response){
   var media_res = [];
   var hashtag_resp = request.params.hashtag;
+  subscribe(hashtag_resp,request.host);
   helpers.getMedia(hashtag_resp,function(error, media){
     media_res = typeof media !== 'undefined' ? media : [].reverse();
     for(var m in media_res){
@@ -136,6 +148,7 @@ app.get('/updates/:hashtag', function(request, response){
 app.get('/', function(request, response){ 
   var media_res = [];
   var hashtag_resp = "armoryshow";
+  subscribe(hashtag_resp,request.host);
   helpers.getMedia(hashtag_resp,function(error, media){
     media_res = typeof media !== 'undefined' ? media : [].reverse();
     for(var m in media_res){

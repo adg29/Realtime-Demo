@@ -92,7 +92,7 @@ $wrapper.imagesLoaded()
 .always(function(instance){
   $wrapper.isotope({
     // options
-    sortAscending: true,
+    sortAscending: false,
     getSortData: {
         date: function (el) {
             return Date(parseInt($(el).data('created'))*1000);

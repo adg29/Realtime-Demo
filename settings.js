@@ -8,10 +8,10 @@ exports.app = app;
 exports.server = server;
 
 exports.appPort = process.env.PORT || process.env.IG_APP_PORT || 3000;
-exports.CLIENT_ID = process.env.IG_CLIENT_ID || "87f4400b663c4c568ac2bd9a36b87b67";
-exports.CLIENT_SECRET = process.env.IG_CLIENT_SECRET || "ace1dd176b674b75879a14d4fd175962";
+exports.IG_CLIENT_ID = process.env.IG_CLIENT_ID || "87f4400b663c4c568ac2bd9a36b87b67";
+exports.IG_CLIENT_SECRET = process.env.IG_CLIENT_SECRET || "ace1dd176b674b75879a14d4fd175962";
 exports.httpClient = (process.env.IG_USE_INSECURE ? require('http') : require('https'));
-exports.apiHost = process.env.IG_API_HOST || 'api.instagram.com';
+exports.apiHost = process.env.IG_API_HOST || 'https://api.instagram.com';
 exports.apiPort = process.env.IG_API_PORT || null;
 exports.basePath = process.env.IG_BASE_PATH || '';
 exports.REDIS_PORT = 6486;

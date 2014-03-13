@@ -33,7 +33,7 @@ function isValidRequest(request) {
     // First, let's verify the payload's integrity by making sure it's
     // coming from a trusted source. We use the client secret as the key
     // to the HMAC.
-    var hmac = crypto.createHmac('sha1', settings.CLIENT_SECRET);
+    var hmac = crypto.createHmac('sha1', settings.IG_CLIENT_SECRET);
     hmac.update(request.rawBody);
     var providedSignature = request.headers['x-hub-signature'];
     var calculatedSignature = hmac.digest(encoding='hex');
@@ -57,9 +57,9 @@ function isValidRequest(request) {
    using your client secret as a key and the payload as the message. 
    Our Ruby and Python libraries provide sample implementations of this check. 
    */
-    var hmac = crypto.createHmac('sha1', settings.CLIENT_SECRET);
+    var hmac = crypto.createHmac('sha1', settings.IG_CLIENT_SECRET);
     hmac.update(request.rawBody);
-    var hmacback = crypto.createHmac('sha1', settings.CLIENT_SECRET);
+    var hmacback = crypto.createHmac('sha1', settings.IG_CLIENT_SECRET);
     hmacback.update(request.rawBody[0]);
     var providedSignature = request.headers['x-hub-signature'];
     var calculatedSignature = hmac.digest(encoding='hex');
@@ -89,6 +89,9 @@ function debug(msg) {
 }
 exports.debug = debug;
 
+
+
+
 function getMedia(hashtag,callback){
     // This function gets the most recent media stored in redis
   redisClient.lrange('media:'+hashtag, 0, settings.hashtag_items-1, function(error, media){
@@ -102,8 +105,8 @@ function getMedia(hashtag,callback){
           callback(error,media);
         });
       }else{
-        debug('reversing');
         callback(error, media.reverse());
+        //callback(error, media);
       }
   });
 }
@@ -113,7 +116,7 @@ exports.getMedia = getMedia;
 function processTag(tag, update, callback){
   var path = '/v1/tags/' + tag + '/media/recent/';
   getMinID(tag, function(error, minID){
-    var queryString = "?client_id="+ settings.CLIENT_ID;
+    var queryString = "?client_id="+ settings.IG_CLIENT_ID;
     if(minID){
       queryString += '&min_id=' + minID;
     } else {
@@ -130,8 +133,11 @@ function processTag(tag, update, callback){
         options['port'] = settings.apiPort;
     }
 
-        // Asynchronously ask the Instagram API for new media for a given
-        // tag.
+
+
+    debug('get ASYNC')
+    // Asynchronously ask the Instagram API for new media for a given
+    // tag.
     settings.httpClient.get(options, function(response){
       var data = '';
       response.on('data', function(chunk){
@@ -193,7 +199,7 @@ exports.processTag = processTag;
 function processGeography(geoName, update){
   var path = '/v1/geographies/' + update.object_id + '/media/recent/';
   getMinID(geoName, function(error, minID){
-    var queryString = "?client_id="+ settings.CLIENT_ID;
+    var queryString = "?client_id="+ settings.IG_CLIENT_ID;
     if(minID){
       queryString += '&min_id=' + minID;
     } else {
