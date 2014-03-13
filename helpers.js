@@ -15,10 +15,6 @@ if (process.env.REDISTOGO_URL) {
 redisClient.on("error", function (err) {
   debug("ERROR: redisClient");
   debug(e);
-  redisClient.flushDB( function (err, didSucceed) {
-    debug('FLUSHDB didSucceed'); // true
-    debug(didSucceed); // true
-  });
 });
 
 
@@ -100,13 +96,13 @@ function getMedia(hashtag,callback){
 
 
       debug("getMedia: got " + media.length + " items");
-      debug('redisMedia')
       // Parse each media JSON to send to callback
       media = media.map(function(json){return JSON.parse(json);});
-      debug(media.length)
       if(media.length < hashtag_items){
       //if(media.length == 0 ){
-        callback(error, processTag(hashtag,"manual"));
+        processTag(hashtag,"manual",function(media){
+          callback(error,media);
+        });
       }else{
         callback(error, media);
       }
@@ -115,7 +111,7 @@ function getMedia(hashtag,callback){
 exports.getMedia = getMedia;
 
 
-function processTag(tag, update){
+function processTag(tag, update, callback){
   var path = '/v1/tags/' + tag + '/media/recent/';
   getMinID(tag, function(error, minID){
     var queryString = "?client_id="+ settings.CLIENT_ID;
@@ -123,7 +119,7 @@ function processTag(tag, update){
       queryString += '&min_id=' + minID;
     } else {
         // If this is the first update, just grab the most recent.
-      queryString += '&count=1';
+      queryString += '&count=23';
     }
     var options = {
       host: settings.apiHost,
@@ -137,8 +133,6 @@ function processTag(tag, update){
 
         // Asynchronously ask the Instagram API for new media for a given
         // tag.
-    debug("processTac: getting " + path);
-    debug("options")
     settings.httpClient.get(options, function(response){
       var data = '';
       response.on('data', function(chunk){
@@ -166,12 +160,14 @@ function processTag(tag, update){
           debug("*********Published: " + tag );
           debug("*********Published: " + data.length);
           if(update=="manual") {
+            debug(parsedResponse);
             debug("*******manual: " + tag);
             debug("*********manual: " + data.length);
-            return parsedResponse;
+            debug("*********manual: " + parsedResponse.data.length);
+            callback(parsedResponse.data);
           }
         }catch(e){
-          debug("REDIS ERROR: redisClient.publish('channel:' + tag, data)");
+          debug("REDIS ERROR: redisClient.publish channel '" + tag);
           debug(e);
 
           redisClient.flushDB( function (err, didSucceed) {
@@ -246,11 +242,6 @@ function processGeography(geoName, update){
         }catch(e){
           debug("REDIS ERROR: redisClient.publish('channel:' + geoName, data)");
           debug(e);
-
-          redisClient.flushDB( function (err, didSucceed) {
-            debug('FLUSHDB didSucceed'); // true
-            debug(didSucceed); // true
-          });
         }
       });
     });

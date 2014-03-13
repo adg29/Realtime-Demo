@@ -17,7 +17,6 @@ var app = settings.app;
 var server = settings.server;
 
 app.get('/proxied_image/:image_url', function(req, res){
-  helpers.debug("Starting proxy");
   var image_url = req.params.image_url;
  
   http({url:image_url,encoding:null},function(e,r,b){

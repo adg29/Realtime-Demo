@@ -33,7 +33,7 @@ html.csstransforms3d
             a.icon.icon-data Data Management
             a.icon.icon-data Data Management
       div#wrapper
-        each image,i in images.reverse()
+        each image,i in images
           .grid-sizer 
           .element(data-created="#{image.created_time}",data-uid="#{image.id}")
             figure

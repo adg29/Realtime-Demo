@@ -59,10 +59,6 @@ if (process.env.REDISTOGO_URL) {
 pubSubClient.on("error", function (err) {
   debug("ERROR: pubsubClient subscriptions.js");
   debug(e);
-  pubSubClient.flushDB( function (err, didSucceed) {
-    debug('FLUSHDB didSucceed'); // true
-    debug(didSucceed); // true
-  });
 });
 
 
@@ -99,11 +95,10 @@ pubSubClient.on('pmessage', function(pattern, channel, message){
         helpers.debug(media);
         media.meta = {};
         media.meta.location = channelName;
-        helpers.debug('redis length');
         var redis_length;
         redisClient.llen('media:objects',function(err,len){
           redis_length = len;
-          helpers.debug(redis_length);
+          helpers.debug('redis_len ' + redis_length);
           if(redis_length>1700){
             redisClient.ltrim("media:objects",0,1200,function (err, didSucceed) {
               helpers.debug('ltrimDidSucceed'); // true
@@ -112,7 +107,11 @@ pubSubClient.on('pmessage', function(pattern, channel, message){
             });
           }
         });
-        redisClient.lpush('media:'+channelName, JSON.stringify(media));
+        redisClient.lpush('media:'+channelName, JSON.stringify(media),function(err,result){
+            helpers.debug('lpushResult'); // true
+            helpers.debug(JSON.stringify(err)); // true
+            helpers.debug(result); // true
+          });
     }
     
     // Send out whole update to the listeners
