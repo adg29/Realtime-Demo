@@ -1,6 +1,7 @@
 var redis = require('redis');
 var settings = require('./settings');
 var crypto = require('crypto');
+var http = require('request');
 var settings = require('./settings');
 var redisClient;
 
@@ -124,66 +125,52 @@ function processTag(tag, update, callback){
       queryString += '&count='+settings.hashtag_items;
     }
     var options = {
-      host: settings.apiHost,
+      url: settings.apiHost+ settings.basePath + path + queryString,
       // Note that in all implementations, basePath will be ''. Here at
       // instagram, this aint true ;)
-      path: settings.basePath + path + queryString
     };
-    if(settings.apiPort){
-        options['port'] = settings.apiPort;
-    }
-
-
 
     debug('get ASYNC')
     // Asynchronously ask the Instagram API for new media for a given
     // tag.
-    settings.httpClient.get(options, function(response){
-      var data = '';
-      response.on('data', function(chunk){
-        debug("processTag Got data...");
-        data += chunk;
-      });
-      response.on('end', function(){
-        debug("processTag Got end.");
-          try {
-            var parsedResponse = JSON.parse(data);
-          } catch (e) {
-              console.log('Couldn\'t parse data. Malformed?');
-              return;
-          }
-        if(!parsedResponse || !parsedResponse['data']){
-            console.log('Did not receive data for ' + tag +':');
-            console.log(data);
-            return;
-        }
-        setMinID(tag, parsedResponse['data']);
+    http.get(options, function(e,i,response){
+      var data = response;
+      try {
+        var parsedResponse = JSON.parse(data);
+      } catch (e) {
+        console.log('Couldn\'t parse data. Malformed?');
+        return;
+      }
+      if(!parsedResponse || !parsedResponse['data']){
+        console.log('Did not receive data for ' + tag +':');
+        console.log(data);
+        return;
+      }
+      setMinID(tag, parsedResponse['data']);
         
-        // Let all the redis listeners know that we've got new media.
-        try{
-          redisClient.publish('channel:' + tag , data);
-          debug("*********Published: " + tag );
-          debug("*********Published: " + data.length);
-          if(update=="manual") {
-            debug(parsedResponse);
-            debug("*******manual: " + tag);
-            debug("*********manual: " + data.length);
-            debug("*********manual: " + parsedResponse.data.length);
-            callback(parsedResponse.data);
-          }
-        }catch(e){
-          debug("REDIS ERROR: redisClient.publish channel '" + tag);
-          debug(e);
-
-          redisClient.flushDB( function (err, didSucceed) {
-            debug('FLUSHDB didSucceed'); // true
-            debug(didSucceed); // true
-          });
+      // Let all the redis listeners know that we've got new media.
+      try{
+        redisClient.publish('channel:' + tag , data);
+        debug("*********Published: " + tag );
+        debug("*********Published: " + data.length);
+        if(update=="manual") {
+          debug(parsedResponse);
+          debug("*******manual: " + tag);
+          debug("*********manual: " + data.length);
+          debug("*********manual: " + parsedResponse.data.length);
+          callback(parsedResponse.data);
         }
-      });
+      }catch(e){
+        debug("REDIS ERROR: redisClient.publish channel '" + tag);
+        debug(e);
+
+        redisClient.flushDB( function (err, didSucceed) {
+          debug('FLUSHDB didSucceed'); // true
+          debug(didSucceed); // true
+        });
+      }
     });
   });
-  //debug("Processed " + updates.length + " tag updates");
 }
 exports.processTag = processTag;
 
