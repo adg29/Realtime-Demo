@@ -69,7 +69,7 @@ var Media = {
           $wrapper.prepend($newItems).isotope('prepended',$newItems );
         });
         $wrapper.imagesLoaded( function(){
-          $wrapper.isotope({ sortBy: 'date',sortAscending: true}); 
+          $wrapper.isotope('updateSortData').isotope();
           var d = new Date();
           $corner_stamp_status.prepend(status+" "+$wrapper.isotope('getItemElements').length+" total</p><p class='small'>END "+d.toLocaleTimeString()+"</p>");
         });
@@ -95,16 +95,19 @@ $wrapper.imagesLoaded()
     sortAscending: true,
     getSortData: {
         date: function (el) {
-            return Date($(el).data('created'));
+            return Date(parseInt($(el).data('created'))*1000);
         }
     },
+    sortBy: 'date',
     itemSelector : '.element',
     masonry: {
       columnWidth: 4,//'.grid-sizer',
     }
 
   });
-  $wrapper.isotope({ sortBy: 'date',sortAscending: true}); 
+  //$wrapper.isotope('updateSortData').isotope();
+
+
 })
 .progress( function( instance, image ) {
   var result = image.isLoaded ? 'loaded' : 'broken';

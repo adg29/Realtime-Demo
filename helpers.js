@@ -91,20 +91,19 @@ exports.debug = debug;
 
 function getMedia(hashtag,callback){
     // This function gets the most recent media stored in redis
-  var hashtag_items = 23;
-  redisClient.lrange('media:'+hashtag, 0, hashtag_items, function(error, media){
+  redisClient.lrange('media:'+hashtag, 0, settings.hashtag_items-1, function(error, media){
 
 
       debug("getMedia: got " + media.length + " items");
       // Parse each media JSON to send to callback
       media = media.map(function(json){return JSON.parse(json);});
-      if(media.length < hashtag_items){
-      //if(media.length == 0 ){
+      if(media.length < settings.hashtag_items){
         processTag(hashtag,"manual",function(media){
           callback(error,media);
         });
       }else{
-        callback(error, media);
+        debug('reversing');
+        callback(error, media.reverse());
       }
   });
 }
@@ -119,7 +118,7 @@ function processTag(tag, update, callback){
       queryString += '&min_id=' + minID;
     } else {
         // If this is the first update, just grab the most recent.
-      queryString += '&count=23';
+      queryString += '&count='+settings.hashtag_items;
     }
     var options = {
       host: settings.apiHost,

@@ -17,6 +17,7 @@ exports.basePath = process.env.IG_BASE_PATH || '';
 exports.REDIS_PORT = 6486;
 exports.REDIS_HOST = '127.0.0.1';
 exports.debug = true;
+exports.hashtag_items = 24;
 
 server.listen(exports.appPort);
 app.set('view engine', 'jade');
